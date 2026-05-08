@@ -1,0 +1,15 @@
+Alphabet stretch smoke test
+beta=0.02083333, h=20, B_win=100, C_hash=1210
+pair-witness verification: checked 341376 triples, bad=0
+
+code | Q | K | |C| | support | log2(Q) | max p | Coll | route | C_hash
+---- | - | - | --- | ------- | ------- | ----- | ---- | ----- | ------
+binary-full | 2 | 8128 | 2^8128 | 2 | 1.00 | 0.500000 | 0.500000 | terminal-high-atom | 1210
+pair-witness(n=128) | 8128 | 8128 | 128 | 127 | 12.99 | 0.015625 | 0.007935 | hash-eligible | 1210
+pair-witness(n=128) | 66064384 | 8128 | 128 | 127 | 25.98 | 0.015625 | 0.007935 | hash-eligible | 1210
+pair-witness(n=128) | 2^129.89 | 8128 | 128 | 127 | 129.89 | 0.015625 | 0.007935 | hash-eligible | 1210
+
+Stretch verdict:
+- Q=2 is a valid balanced code but routes to terminal-high-atom, as expected.
+- For Q=K,K^2,K^10, the used support, max atom, collision, route, and C_hash are unchanged.
+- Only naive log2(Q) changes; charging that quantity would fail this test.

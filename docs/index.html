@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Public Normal-Form Framework for Sunflower Bounds</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #52616b;
+      --line: #d9e2ec;
+      --accent: #0f766e;
+      --bg: #ffffff;
+      --soft: #f5f7fa;
+    }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1.08;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: 1.25rem;
+      margin-top: 36px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+    p {
+      max-width: 760px;
+    }
+    .status {
+      display: inline-block;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0;
+    }
+    .links a {
+      color: var(--accent);
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 6px;
+      background: var(--soft);
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    pre {
+      overflow-x: auto;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px;
+      text-align: right;
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="status">Conditional draft</span>
+    <h1>A Public Normal-Form Framework for Entropy Bookkeeping in Sunflower Bounds</h1>
+    <p class="muted">Yuli Li, Jingping Yang, Renhao Zhang</p>
+    <p>
+      This is a public draft and reproducibility package for a conditional
+      framework. It does not claim an unconditional proof of the Erdos-Rado
+      sunflower conjecture. The main theorem is an interface reduction: if the
+      public transition-system certificates specified in the paper are all
+      verified, the framework would imply a constant-base bound for balanced
+      two-collision codes.
+    </p>
+    <div class="links">
+      <a href="sunflower_public_normal_form_v1.pdf">PDF</a>
+      <a href="sunflower_public_normal_form_v1.tex">TeX source</a>
+      <a href="worked_transition.log">Worked trace log</a>
+      <a href="alphabet_stretch.log">Alphabet stretch log</a>
+    </div>
+
+    <h2>What To Inspect First</h2>
+    <p>
+      The candidate alphabet-free mechanism is the fixed labelled hash window:
+      low-collision coordinates are placed into a bounded public window without
+      exposing alphabet values, and repeated use is charged to fresh, old, and
+      scale potentials.
+    </p>
+
+    <h2>Reproducibility</h2>
+    <pre><code>python3 code/alphabet_stretch_test.py
+python3 code/worked_transition_example.py</code></pre>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Q</th>
+          <th>log2(Q)</th>
+          <th>initial Phi</th>
+          <th>max checkpoint lhs</th>
+          <th>final lhs</th>
+          <th>ok</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>300</td><td>8.23</td><td>264000</td><td>245650</td><td>235754</td><td>true</td></tr>
+        <tr><td>90000</td><td>16.46</td><td>264000</td><td>245650</td><td>235754</td><td>true</td></tr>
+        <tr><td>2^82.29</td><td>82.29</td><td>264000</td><td>245650</td><td>235754</td><td>true</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

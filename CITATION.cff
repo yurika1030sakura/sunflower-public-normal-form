@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this draft or its audit scripts, please cite this repository release."
+title: "A Public Normal-Form Framework for Entropy Bookkeeping in Sunflower Bounds"
+version: "v1.0"
+date-released: "2026-05-08"
+authors:
+  - family-names: "Li"
+    given-names: "Yuli"
+    affiliation: "Department of Chemistry and Chemical Biology, Harvard University"
+  - family-names: "Yang"
+    given-names: "Jingping"
+    affiliation: "ByteDance Ltd."
+  - family-names: "Zhang"
+    given-names: "Renhao"
+    affiliation: "Manning College of Information and Computer Sciences, University of Massachusetts Amherst"
+repository-code: "https://github.com/yurika1030sakura/sunflower-public-normal-form"
+abstract: "A conditional public-normal-form framework for entropy bookkeeping in sunflower bounds, with executable audit tests for alphabet stretching and ledger traces."
+keywords:
+  - sunflower conjecture
+  - entropy method
+  - combinatorics
+  - public normal form
+  - two-collision codes
+license: "MIT"

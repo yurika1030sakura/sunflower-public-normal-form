@@ -1,0 +1,40 @@
+Worked transition trace
+rank K=300, ambient |Omega|=2^82.29, code size=25
+pair-witness code: checked 2300 triples, bad=0, support=24, max_atom=0.080000, collision=0.043200
+beta=0.083, h=3, B_win=20, C_hash=50, log2(|Omega|)=82.29
+initial Phi=264000
+
+transition | spent | pending | Phi | spent+Phi | spent+token+Phi | status
+---------- | -----: | ------: | --: | --------: | --------------: | ------
+inactive -> close-pair activation | 150 | 0 | 245500 | 245650 | 245650 | ok
+  note: rank drop pays a public DRC/activation child of size 50
+close-pair -> labelled hash production | 150 | 0 | 245500 | 245650 | 245650 | ok
+  note: six low-collision coordinates are available; transcript is stopped within B_win
+hash window -> residual near-sunflower | 150 | 1 | 245500 | 245650 | 245700 | pending-token
+  note: one temporary C_hash token is attached to the returned residual block
+residual -> fresh promotion, token assigned | 250 | 0 | 238550 | 238800 | 238800 | ok
+  note: fresh drop pays transcript, a child rank/scale deposit, and the unique hash token
+close-pair -> law-level residual return | 250 | 0 | 238550 | 238800 | 238800 | ok
+  note: probabilistic near-sunflower return; no alphabet value is exposed
+residual -> second fresh promotion | 300 | 0 | 236550 | 236850 | 236850 | ok
+  note: another disjoint fresh set is promoted
+residual -> old-window registration | 324 | 0 | 235740 | 236064 | 236064 | ok
+  note: old incidences debit N_old and birth a smaller old close-pair block
+old-window -> high-revisit terminal | 325 | 0 | 235740 | 236065 | 236065 | ok
+  note: alternative terminal branch: high revisit pins one projected coordinate
+old-window -> deletion-trapped scale descent | 344 | 0 | 235410 | 235754 | 235754 | ok
+  note: nonterminal continuation drops active scale to 1
+bounded leaf | 344 | 0 | 235410 | 235754 | 235754 | ok
+  note: active rank is below the toy m0 cutoff
+
+Summary:
+- ordinary token-free checkpoints satisfy spent+Phi <= initial Phi: True
+- the single hash-return row is a non-checkpoint pending-token state
+- final token-free bounded-leaf checkpoint ok: True
+
+Alphabet replay
+Q | log2(Q) | initial Phi | max checkpoint lhs | final lhs | ok
+- | -------: | ----------: | -----------------: | --------: | --
+300 | 8.23 | 264000 | 245650 | 235754 | True
+90000 | 16.46 | 264000 | 245650 | 235754 | True
+2^82.29 | 82.29 | 264000 | 245650 | 235754 | True
