@@ -13,6 +13,12 @@ probabilities can be kept until terminal projection.  It does not close the
 larger question of whether every local transition satisfies the required
 selector-charge hypotheses.
 
+The note
+[`notes/local_selector_certificate_expansion.md`](notes/local_selector_certificate_expansion.md)
+expands the selector-entropy table into elementary local primitives.  It is
+intended to prevent "by inspection" table entries from hiding uncharged terminal,
+hash, pruning, or high-revisit branches.
+
 ## Current Recommendation
 
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
@@ -268,7 +274,26 @@ Interpretation: this supports the local collision-to-split estimate and its
 alphabet-free use.  It does not verify conditional-law transfer from product-KL
 branches.
 
-### 12. Ledger random-walk fuzzer
+### 12. High-revisit exhaustiveness test
+
+Script:
+
+```bash
+python3 code/high_revisit_exhaustiveness_test.py
+```
+
+This diagnostic-style test records a concrete failure of the old shorthand
+"heavy atom or low collision" for one-coordinate exits: a law can have a
+moderate heavy atom and a large complement whose unconditional collision is not
+the relevant object.  The corrected route uses heavy atoms plus the light
+complement.  The complement either has mass below the pruning threshold or,
+after conditioning, has collision below the target threshold.
+
+Interpretation: this supports the revised high-revisit/collision exit now used
+in the draft.  It does not prove that every analytic high-revisit branch reaches
+the one-coordinate law with the stated public transcript already paid.
+
+### 13. Ledger random-walk fuzzer
 
 Script:
 

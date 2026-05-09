@@ -1,0 +1,9 @@
+One-coordinate exit exhaustiveness test
+rho=0.5, tau=0.2, rho*tau=0.1
+old shorthand has uncovered complement? True
+old shorthand uncovered mass=0.700000
+corrected heavy mass=0.300000
+corrected light mass=0.700000
+corrected light collision=0.010000
+corrected route=low-collision-hash
+OK: heavy branches plus light complement form a partition

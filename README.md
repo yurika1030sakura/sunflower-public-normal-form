@@ -68,6 +68,7 @@ sunflower-public-normal-form/
 │   ├── ledger_random_walk_fuzzer.py
 │   ├── kl_route_diagnostic.py
 │   ├── tuple_to_code_obstruction.py
+│   ├── high_revisit_exhaustiveness_test.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
@@ -82,9 +83,11 @@ sunflower-public-normal-form/
 │   ├── collision_split_bound.log
 │   ├── ledger_random_walk_fuzzer.log
 │   ├── kl_route_diagnostic.log
-│   └── tuple_to_code_obstruction.log
+│   ├── tuple_to_code_obstruction.log
+│   └── high_revisit_exhaustiveness.log
 ├── notes/
-│   └── tuple_martingale_shadow_interface.md
+│   ├── tuple_martingale_shadow_interface.md
+│   └── local_selector_certificate_expansion.md
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -100,6 +103,9 @@ For the current verification status and open issues, see
 For the proved mass-accounting substitute for the false tuple-to-code transfer,
 see
 [`notes/tuple_martingale_shadow_interface.md`](notes/tuple_martingale_shadow_interface.md).
+For the expanded local selector entropy primitives used by the current draft,
+see
+[`notes/local_selector_certificate_expansion.md`](notes/local_selector_certificate_expansion.md).
 
 ### Test 1: Alphabet-Freeness Smoke Test
 
@@ -250,7 +256,22 @@ symbols and verifies that collision and split probabilities are unchanged.
 Expected output is in
 [`outputs/collision_split_bound.log`](outputs/collision_split_bound.log).
 
-### Test 11: Ledger Random-Walk Fuzzer
+### Test 11: High-Revisit Exhaustiveness Test
+
+```bash
+python3 code/high_revisit_exhaustiveness_test.py
+```
+
+This checks the corrected one-coordinate high-revisit/collision route.  The old
+shorthand "heavy atom or low collision" can leave a positive-mass complement
+uncovered.  The current heavy/light route partitions the law into terminal
+heavy atoms, a charged small light complement, or a large light complement with
+low collision.
+
+Expected output is in
+[`outputs/high_revisit_exhaustiveness.log`](outputs/high_revisit_exhaustiveness.log).
+
+### Test 12: Ledger Random-Walk Fuzzer
 
 ```bash
 python3 code/ledger_random_walk_fuzzer.py
