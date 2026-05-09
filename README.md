@@ -70,6 +70,9 @@ sunflower-public-normal-form/
 
 The tests use only the Python standard library.
 
+For the current verification status and open issues, see
+[`AUDIT.md`](AUDIT.md).
+
 ### Test 1: Alphabet-Freeness Smoke Test
 
 ```bash

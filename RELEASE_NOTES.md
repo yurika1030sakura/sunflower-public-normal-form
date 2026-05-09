@@ -1,6 +1,6 @@
 # v1.0 Initial Public Draft
 
-This release contains:
+This release candidate contains:
 
 - a conditional public-normal-form draft for entropy bookkeeping in sunflower
   bounds;
@@ -13,6 +13,8 @@ This release contains:
 This is not an unconditional proof of the Erdos-Rado sunflower conjecture.  The
 main result is presented as a conditional interface reduction.  The local
 certificates in the transition system remain the main verification burden.
+
+Before minting a DOI or marking this as a formal release, see `AUDIT.md`.
 
 ## Audit Scripts
 
