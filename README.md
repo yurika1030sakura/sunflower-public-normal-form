@@ -1,4 +1,4 @@
-# A Public Normal-Form Framework for Entropy Bookkeeping in Sunflower Bounds
+# Coordinate Collision and Amortized Accounting in Sunflower Bounds
 
 **Authors:** Yuli Li, Jingping Yang, Renhao Zhang
 
@@ -23,16 +23,34 @@ to ask the reader to accept an informal claim of a solved conjecture.
 
 ## What Is Novel
 
-The proposed architectural change is to replace a codeword-level spread
-invariant with a public per-coordinate transition system. Low-collision
-coordinates are routed into fixed labelled hash windows; high-mass values are
-terminalized as projected shadows. Near-sunflower outputs are then absorbed by
-fresh, old, and scale potentials.
+The individual tools are not new. Entropy-based sunflower arguments already
+appear in Rao's *Coding for sunflowers*, Tao's entropy formulation, and related
+follow-up work. Collision estimates are standard local tools, and potential or
+amortized accounting is a common proof technique.
 
-Individual ingredients such as entropy estimates, collision bounds, dependent
-random choice, slice-rank reductions, and potential accounting are standard.
-The candidate new mechanism is their organization into a fixed-window,
-alphabet-free public ledger.
+The proposed novelty is architectural. The framework tries to replace the
+reusable spread invariant in ALWZ/Rao/Tao-type arguments by a coordinate-level
+collision/accounting invariant. Low-collision coordinates are not exposed by
+value; they are collected in a fixed labelled hash window. After a constant
+number of surviving coordinates, a Renyi-conditioned copying step is meant to
+return a near-sunflower block at cost `O(B_win + h)`, independent of `k` and of
+the alphabet size. The returned block is then immediately absorbed by
+fresh/old/scale potential drops.
+
+Thus the key audit question is whether this fixed-window return plus the global
+ledger genuinely replaces spread refinement, or whether the logarithmic loss is
+hidden in the accounting.
+
+### Relation to Prior Methods
+
+- **Entropy methods:** standard; see Rao's and Tao's entropy-based sunflower
+  arguments.
+- **Collision estimates:** used before as local tools; here they are proposed as
+  part of the driving invariant.
+- **Amortized accounting:** standard as a technique; here it is proposed to take
+  over the role normally played by a reusable structural spread invariant.
+- **Fixed labelled hash window:** the specific bounded-window plus
+  Renyi-copying mechanism is the proposed new component.
 
 ## What Is Not Claimed
 

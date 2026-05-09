@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this draft or its audit scripts, please cite this repository release."
-title: "A Public Normal-Form Framework for Entropy Bookkeeping in Sunflower Bounds"
+title: "Coordinate Collision and Amortized Accounting in Sunflower Bounds"
 version: "v1.0"
 date-released: "2026-05-08"
 authors:
