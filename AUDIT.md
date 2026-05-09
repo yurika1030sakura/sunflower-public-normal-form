@@ -9,9 +9,10 @@ conditional framework has been independently verified.
 
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
-The repository is already public and timestamped by git commits and the `v1.0`
-tag.  A formal release should wait until the open interface checks below are
-either verified or clearly separated into a smaller conditional statement.
+The repository is already public and timestamped by git commits and the
+`v0.1-audit` tag.  A formal release should wait until the open interface checks
+below are either verified or clearly separated into a smaller conditional
+statement.
 
 If a release is needed before that point, label it as a pre-release audit draft
 and keep the title modest, for example:
@@ -77,6 +78,54 @@ unchanged as `log2(|Omega|)` increases from `8.23` to `82.29`.
 Interpretation: this checks that the written token-free checkpoint semantics
 are coherent on a concrete trace.  It does not prove exhaustiveness of all
 possible branches.
+
+### 4. Multi-label hash-token test
+
+Script:
+
+```bash
+python3 code/multilabel_hash_token_test.py
+```
+
+This state-machine test checks the ambiguity between a per-window and a
+per-branch hash transcript budget.  It accepts a trace in which two different
+sample labels each use the full `B_win` budget, so the branch transcript exceeds
+`B_win` while every individual labelled window remains within budget.
+
+It also rejects the following forbidden traces:
+
+- returning a second hash window while a previous token is pending;
+- entering a child state while a token is pending;
+- producing a descendant hash coordinate while a token is pending;
+- exceeding the transcript budget of one labelled window.
+
+Interpretation: this is evidence that the intended per-labelled-window
+semantics and token-free checkpoint convention are internally coherent.  It is
+not a proof that all analytic branches produce such windows.
+
+### 5. Terminal cylinder compatibility test
+
+Script:
+
+```bash
+python3 code/cylinder_compatibility_test.py
+```
+
+This tests the old-coordinate rebound issue in terminal cylinder projections.
+Deleting an old pinned coordinate also deletes its old-incidence debit, which
+could increase `Phi_old`.  The sweep checks all toy projection cases up to rank
+25 under the hierarchy condition
+
+```text
+B_o > Q * omega_old.
+```
+
+No failures occur.  The script also includes a negative control: replacing
+`B_o` by `Q * omega_old - 1` fails immediately for one old pinned coordinate.
+
+Interpretation: this supports the terminal-cylinder compatibility calculation
+for the specific old-debit deletion failure mode.  It does not verify every
+source of terminal shadows.
 
 ## Open Verification Burdens
 

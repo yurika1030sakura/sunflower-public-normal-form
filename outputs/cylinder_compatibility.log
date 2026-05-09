@@ -1,0 +1,14 @@
+Terminal cylinder compatibility test
+B_f=800, B_o=600, Q=3, omega_old=175, old margin=75
+checked projection cases=23751
+failures=0
+worst nonnegative drop=0
+
+Negative control
+with B_o=524 <= Q*omega_old=525, one old pinned coordinate gives drop=-1
+negative control fails as expected: True
+
+Summary:
+- deleting fresh pinned coordinates strictly lowers Phi_fresh
+- deleting old pinned coordinates cannot increase Phi_old because B_o > Q*omega_old
+- the test would fail immediately if the hierarchy allowed B_o <= Q*omega_old

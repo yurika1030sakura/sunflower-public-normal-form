@@ -57,10 +57,14 @@ sunflower-public-normal-form/
 ├── code/
 │   ├── alphabet_stretch_test.py
 │   ├── worked_transition_example.py
+│   ├── multilabel_hash_token_test.py
+│   ├── cylinder_compatibility_test.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
-│   └── worked_transition.log
+│   ├── worked_transition.log
+│   ├── multilabel_hash_token.log
+│   └── cylinder_compatibility.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -107,6 +111,35 @@ Summary of the alphabet replay:
 | 300 | 8.23 | 264000 | 245650 | 235754 | true |
 | 90000 | 16.46 | 264000 | 245650 | 235754 | true |
 | 2^82.29 | 82.29 | 264000 | 245650 | 235754 | true |
+
+### Test 3: Multi-Label Hash-Token Test
+
+```bash
+python3 code/multilabel_hash_token_test.py
+```
+
+This checks that `B_win` is treated as a per-labelled-window budget and that
+pending hash tokens cannot accumulate.  The positive trace allows two labels to
+each use a full window budget, while the forbidden traces reject child entry,
+descendant hash production, or a second hash return before the pending token is
+paid.
+
+Expected output is in
+[`outputs/multilabel_hash_token.log`](outputs/multilabel_hash_token.log).
+
+### Test 4: Terminal Cylinder Compatibility Test
+
+```bash
+python3 code/cylinder_compatibility_test.py
+```
+
+This checks the old-coordinate deletion issue in terminal cylinder projections.
+The exhaustive toy sweep verifies that deleting pinned old coordinates cannot
+increase the terminal cylinder potential under `B_o > Q omega_old`, and includes
+a negative control showing immediate failure when that inequality is violated.
+
+Expected output is in
+[`outputs/cylinder_compatibility.log`](outputs/cylinder_compatibility.log).
 
 ## Suggested Citation
 

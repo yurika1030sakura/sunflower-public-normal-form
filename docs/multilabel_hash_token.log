@@ -1,0 +1,20 @@
+Multi-label hash-token test
+h=2, B_win=12, C_hash=40
+labels=['X', 'Z']
+branch transcript=24
+window X: transcript=12, coords=4, returned=True
+window Z: transcript=12, coords=4, returned=True
+paid tokens=2, pending token=None
+per-window budget accepted: True
+branch-global budget would reject: True
+
+Forbidden traces
+- second window return while token pending: rejected (cannot return a second hash window while a token is pending)
+- child entry while token pending: rejected (cannot enter child state before assigning pending hash token)
+- descendant hash production while token pending: rejected (cannot produce a descendant hash coordinate while a token is pending)
+- single labelled-window transcript overflow: rejected (window X would exceed its per-window B_win)
+
+Summary:
+- independent labelled windows can each use B_win
+- pending hash tokens cannot accumulate
+- child/descendant hash entry is blocked until the token is paid
