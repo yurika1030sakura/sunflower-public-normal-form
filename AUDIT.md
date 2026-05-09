@@ -10,7 +10,7 @@ conditional framework has been independently verified.
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
 The repository is already public and timestamped by git commits and the
-`v0.2-audit` tag.  A formal release should wait until the open interface checks
+`v0.3-audit` tag.  A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
@@ -127,6 +127,50 @@ Interpretation: this supports the terminal-cylinder compatibility calculation
 for the specific old-debit deletion failure mode.  It does not verify every
 source of terminal shadows.
 
+### 6. Transition exhaustiveness checker
+
+Script:
+
+```bash
+python3 code/transition_exhaustiveness_checker.py
+```
+
+This interface-level checker enumerates the public mode signature space and the
+abstract exit-signal tables.  It verifies:
+
+- legal public nodes classify into exactly one mode;
+- a pending hash token is allowed only on the exceptional returned residual
+  state;
+- raw overlapping exit signals are resolved by deterministic priority;
+- a mode with no available exit signal is rejected as an interface failure.
+
+The current run checks 128 mode signatures and 123 nonempty exit-signal rows.
+It rejects invalid mode overlaps and an uncovered hash-window exit table.
+
+Interpretation: this is a structural sanity check for Proposition 3.6-type
+exhaustiveness.  It still assumes the analytic local lemmas provide at least
+one signal in each mode.
+
+### 7. Constant-hierarchy DAG test
+
+Script:
+
+```bash
+python3 code/constant_hierarchy_dag_test.py
+```
+
+This test builds a dependency graph for the constants and checks:
+
+- the graph is acyclic;
+- `ambient_alphabet` is not an ancestor of the final constant `D`;
+- a concrete toy constant assignment satisfies the displayed ledger
+  inequalities;
+- injecting either a cycle or an ambient alphabet dependency is detected.
+
+Interpretation: this supports the claim that the constant hierarchy is not
+secretly depending on `k` or the ambient alphabet.  It does not replace a fully
+expanded constant table in the paper.
+
 ## Open Verification Burdens
 
 ### A. Local interface verification
@@ -152,8 +196,9 @@ The public modes must form an actual partition after deterministic tie-breaks:
 - old-window mode;
 - terminal and bounded-leaf modes.
 
-The paper currently states this as an interface proposition.  A more convincing
-version would list entry and exit conditions in a mechanically checkable table.
+The current repository now includes a finite interface-level partition checker,
+but the analytic coverage hypotheses behind the exit signals still need direct
+proof.
 
 ### C. Hash-token non-accumulation
 
@@ -167,7 +212,8 @@ scale scenarios.
 ### D. Constant hierarchy
 
 The constants appear acyclic in the current draft, and the toy traces do not
-show hidden alphabet dependence.  A final version should still give a fully
+show hidden alphabet dependence.  The repository now includes a DAG checker for
+the abstract dependency graph.  A final version should still give a fully
 expanded dependency DAG and state which constants are fixed before `k` and the
 ambient alphabet are chosen.
 

@@ -1,0 +1,29 @@
+Transition exhaustiveness checker
+mode signatures checked=128
+valid signatures=8, invalid signatures=120
+valid mode counts:
+- inactive: 1
+- close-pair: 1
+- hash-window: 1
+- residual: 2
+- old-window: 1
+- terminal: 1
+- bounded-leaf: 1
+
+exit table:
+- nonempty raw signal rows checked=123
+- raw overlapping rows resolved by priority=102
+- no-signal rows rejected=5
+- selected exit alternatives=21
+
+negative controls:
+- rejected bad signature NodeSignature(terminal=False, bounded_leaf=False, close_pair=False, hash_window=True, residual=True, old_window=False, pending_hash_token=False): multiple active modes: ['hash_window', 'residual']
+- rejected bad signature NodeSignature(terminal=True, bounded_leaf=False, close_pair=True, hash_window=False, residual=False, old_window=False, pending_hash_token=False): terminal node carries nonterminal data
+- rejected bad signature NodeSignature(terminal=False, bounded_leaf=False, close_pair=False, hash_window=False, residual=False, old_window=False, pending_hash_token=True): pending hash token without returned residual block
+- rejected bad signature NodeSignature(terminal=False, bounded_leaf=False, close_pair=False, hash_window=False, residual=False, old_window=True, pending_hash_token=True): pending hash token is allowed only on returned residual state
+- rejected uncovered hash-window exit table: hash-window has no exit signal
+
+Summary:
+- legal public nodes classify into exactly one mode
+- raw exit overlaps are deterministic after priority
+- missing local-interface coverage is detected rather than silently accepted

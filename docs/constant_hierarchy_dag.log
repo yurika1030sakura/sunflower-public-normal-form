@@ -1,0 +1,21 @@
+Constant hierarchy DAG test
+nodes=22
+topological order=base_thresholds -> sigma -> theta_rk -> q_fresh -> Q_revisit -> r_old -> h -> B_win -> C_hash -> C_fr -> C_old -> C_rk -> B_s -> B_rk -> omega_old -> B_o -> B_f -> m0 -> C_star -> A -> D0 -> D
+ambient alphabet in ancestors(D)=False
+
+toy inequalities:
+- omega_old definition: 175 == 175
+- old margin: 600 > 545
+- fresh margin: 200 > 174
+- rank child margin: 60 > 93/4
+- scale cutoff margin: 96 > 60
+- base-case absorbed: 1000000000 >= 1000
+
+negative controls:
+- cycle injection rejected: cycle detected at C_hash
+- ambient-alphabet dependency injection detected in ancestors(D)
+
+Summary:
+- dependency graph is acyclic
+- D depends on fixed hierarchy constants, not on k or ambient alphabet
+- toy constants satisfy the ledger inequalities used in the audit scripts

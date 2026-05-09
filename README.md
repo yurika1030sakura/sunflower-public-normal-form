@@ -59,12 +59,16 @@ sunflower-public-normal-form/
 │   ├── worked_transition_example.py
 │   ├── multilabel_hash_token_test.py
 │   ├── cylinder_compatibility_test.py
+│   ├── transition_exhaustiveness_checker.py
+│   ├── constant_hierarchy_dag_test.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
 │   ├── worked_transition.log
 │   ├── multilabel_hash_token.log
-│   └── cylinder_compatibility.log
+│   ├── cylinder_compatibility.log
+│   ├── transition_exhaustiveness.log
+│   └── constant_hierarchy_dag.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -140,6 +144,35 @@ a negative control showing immediate failure when that inequality is violated.
 
 Expected output is in
 [`outputs/cylinder_compatibility.log`](outputs/cylinder_compatibility.log).
+
+### Test 5: Transition Exhaustiveness Checker
+
+```bash
+python3 code/transition_exhaustiveness_checker.py
+```
+
+This interface-level checker enumerates public mode signatures and abstract
+exit-signal tables.  It verifies that legal public nodes classify into exactly
+one mode, overlapping exit signals are resolved by deterministic priority, and
+missing local-interface coverage is rejected rather than silently accepted.
+
+Expected output is in
+[`outputs/transition_exhaustiveness.log`](outputs/transition_exhaustiveness.log).
+
+### Test 6: Constant-Hierarchy DAG Test
+
+```bash
+python3 code/constant_hierarchy_dag_test.py
+```
+
+This checks that the constant dependency graph is acyclic and that the final
+constant `D` does not depend on `k` or the ambient alphabet.  It also validates
+a concrete toy assignment satisfying the inequalities used by the audit scripts
+and includes negative controls for an injected cycle and an injected ambient
+alphabet dependency.
+
+Expected output is in
+[`outputs/constant_hierarchy_dag.log`](outputs/constant_hierarchy_dag.log).
 
 ## Suggested Citation
 
