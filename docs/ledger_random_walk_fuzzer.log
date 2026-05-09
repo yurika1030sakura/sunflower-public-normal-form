@@ -1,0 +1,15 @@
+Ledger random-walk fuzzer
+traces=1000
+initial Phi=264000
+max steps seen=29
+pending-token hard exits seen=555
+max token-free spent+Phi seen=245701
+checkpoint margin=18299
+
+negative control:
+- nested hash return rejected: hash token pile-up
+
+Summary:
+- all random token-free checkpoints satisfy spent+Phi <= initial Phi
+- every pending hash token is cleared by the next hard exit
+- old incidences stay under the revisit cap on nonterminal branches

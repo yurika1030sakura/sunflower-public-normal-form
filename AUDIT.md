@@ -10,7 +10,7 @@ conditional framework has been independently verified.
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
 The repository is already public and timestamped by git commits and the
-`v0.5-audit` tag.  A formal release should wait until the open interface checks
+`v0.6-audit` tag.  A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
@@ -260,6 +260,28 @@ Interpretation: this supports the local collision-to-split estimate and its
 alphabet-free use.  It does not verify conditional-law transfer from product-KL
 branches.
 
+### 12. Ledger random-walk fuzzer
+
+Script:
+
+```bash
+python3 code/ledger_random_walk_fuzzer.py
+```
+
+This fuzzer generates 1000 random abstract branches using the same toy constants
+as the worked transition trace.  The current run includes 555 pending-token hard
+exits.  It checks:
+
+- every token-free checkpoint satisfies `spent + Phi <= initial Phi`;
+- every pending hash token is cleared by the next hard exit;
+- old incidences remain under the revisit cap on nonterminal branches;
+- a nested hash return while a token is pending is rejected.
+
+Interpretation: this gives broader stress coverage for ledger composition than
+a single hand-written trace.  It remains an abstract ledger fuzzer, not an
+analytic proof that every branch of a real family follows one of these
+transitions.
+
 ## Open Verification Burdens
 
 ### A. Local interface verification
@@ -300,7 +322,8 @@ one pending token attached to the returned residual block, but that token must
 be assigned before a child state or descendant hash window is entered.
 
 This has been stress-tested for multi-label windows, stopped prefix budgets,
-and child-entry blocking.  Nested scale scenarios still deserve more testing.
+child-entry blocking, and random compositions of hard exits.  Nested scale
+scenarios still deserve more testing at the analytic transition level.
 
 ### D. Constant hierarchy
 

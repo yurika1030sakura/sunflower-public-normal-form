@@ -65,6 +65,7 @@ sunflower-public-normal-form/
 │   ├── hash_prefix_budget_test.py
 │   ├── renyi_copy_tax_test.py
 │   ├── collision_split_bound_test.py
+│   ├── ledger_random_walk_fuzzer.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
@@ -76,7 +77,8 @@ sunflower-public-normal-form/
 │   ├── old_queue_refinement.log
 │   ├── hash_prefix_budget.log
 │   ├── renyi_copy_tax.log
-│   └── collision_split_bound.log
+│   ├── collision_split_bound.log
+│   └── ledger_random_walk_fuzzer.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -237,6 +239,20 @@ symbols and verifies that collision and split probabilities are unchanged.
 
 Expected output is in
 [`outputs/collision_split_bound.log`](outputs/collision_split_bound.log).
+
+### Test 11: Ledger Random-Walk Fuzzer
+
+```bash
+python3 code/ledger_random_walk_fuzzer.py
+```
+
+This generates random abstract branches using the same toy constants as the
+worked trace.  It checks the token-free checkpoint inequality, immediate
+clearing of pending hash tokens by hard exits, and the old-incidence revisit
+cap across many composed fresh/old/scale/hash/terminal sequences.
+
+Expected output is in
+[`outputs/ledger_random_walk_fuzzer.log`](outputs/ledger_random_walk_fuzzer.log).
 
 ## Suggested Citation
 
