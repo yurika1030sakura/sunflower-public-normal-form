@@ -1,0 +1,17 @@
+Renyi conditioned-copy tax test
+m=3, rho=0.2
+- uniform-5: ok=True, margin=0, support=5
+- spiky: ok=True, margin=1.15027841775e-05, support=4
+- geometric: ok=True, margin=0.000615240292195, support=8
+- random-3: ok=True, margin=0.0988730452549, support=3
+- random-6: ok=True, margin=0.0836403745854, support=6
+- random-10: ok=True, margin=0.0264610975513, support=10
+- random-20: ok=True, margin=0.00856235702911, support=20
+
+Negative control
+- bad-heavy-key: ok=False, margin=-0.188462959194
+
+Summary:
+- all surviving-key cases satisfy the Renyi lower bound: True
+- worst nonnegative margin=0
+- violating the per-key rho lower bound can break the inequality

@@ -10,7 +10,7 @@ conditional framework has been independently verified.
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
 The repository is already public and timestamped by git commits and the
-`v0.4-audit` tag.  A formal release should wait until the open interface checks
+`v0.5-audit` tag.  A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
@@ -215,6 +215,51 @@ full.
 Interpretation: this supports the claim that long prefixes are paid by terminal
 shadow coordinates rather than being smuggled into a fixed hash window.
 
+### 10. Renyi conditioned-copy tax test
+
+Script:
+
+```bash
+python3 code/renyi_copy_tax_test.py
+```
+
+This finite-distribution test verifies the lower bound
+
+```text
+sum_k p_k^m nu_k^m(F_k) >= rho * exp(-(m-1) H_m(K))
+```
+
+under the hypothesis that every surviving key has
+`nu_k^m(F_k) >= rho`.  The negative control puts event probability zero on a
+heavy key and shows that the bound can fail if the uniform per-key condition is
+removed.
+
+Interpretation: this supports the Renyi copy-tax arithmetic used by the fixed
+hash-window return.  It does not prove that the manuscript always identifies
+the correct surviving-key set.
+
+### 11. Collision split-bound test
+
+Script:
+
+```bash
+python3 code/collision_split_bound_test.py
+```
+
+This checks the finite one-coordinate identity and bound
+
+```text
+Pr[split] = 3 sum_a p_a^2 (1-p_a) <= 3 Coll(p).
+```
+
+The test includes deterministic, pseudo-random, and pair-witness distributions,
+and verifies that adding unused ambient alphabet symbols does not change either
+collision or split probability.
+
+Interpretation: this supports the local collision-to-split estimate and its
+alphabet-free use.  It does not verify conditional-law transfer from product-KL
+branches.
+
 ## Open Verification Burdens
 
 ### A. Local interface verification
@@ -228,6 +273,10 @@ interface must be checked directly from its hypotheses, including:
 - old-supported residual routing;
 - old-window/high-revisit routing;
 - terminal cylinder potential compatibility.
+
+The Renyi and collision arithmetic sublemmas now have finite-distribution audit
+tests.  The remaining burden is the routing/conditioning interface which brings
+actual transition-system laws into those sublemmas.
 
 ### B. Exhaustiveness of the transition system
 

@@ -1,0 +1,17 @@
+Collision split-bound test
+- uniform-2: support=2, Coll=0.5, split=0.75, 3Coll=1.5, ok=True
+- uniform-20: support=20, Coll=0.05, split=0.1425, 3Coll=0.15, ok=True
+- spiky: support=4, Coll=0.536332179931, split=0.536128638307, 3Coll=1.60899653979, ok=True
+- pair-witness-n128: support=127, Coll=0.0079345703125, split=0.0236120223999, 3Coll=0.0238037109375, ok=True
+- random-5: support=5, Coll=0.784767449179, split=0.30368768131, 3Coll=2.35430234754, ok=True
+- random-11: support=11, Coll=0.132528973481, split=0.333826525715, 3Coll=0.397586920442, ok=True
+- random-30: support=30, Coll=0.0541465334072, split=0.152544707725, 3Coll=0.162439600221, ok=True
+
+Ambient alphabet stretch
+- Q=127 log2(Q)=6.99: Coll=0.0079345703125, split=0.0236120223999
+- Q=8128 log2(Q)=12.99: Coll=0.0079345703125, split=0.0236120223999
+- Q=66064384 log2(Q)=25.98: Coll=0.0079345703125, split=0.0236120223999
+
+Summary:
+- all finite laws satisfy split <= 3 Coll: True
+- adding unused alphabet symbols leaves Coll and split unchanged: True

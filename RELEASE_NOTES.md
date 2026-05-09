@@ -5,7 +5,7 @@ This release candidate contains:
 - a conditional public-normal-form draft for entropy bookkeeping in sunflower
   bounds;
 - the TeX source and compiled PDF;
-- eight executable audit scripts;
+- ten executable audit scripts;
 - expected output logs for reproducibility.
 
 ## Status
@@ -29,6 +29,8 @@ python3 code/transition_exhaustiveness_checker.py
 python3 code/constant_hierarchy_dag_test.py
 python3 code/old_queue_refinement_test.py
 python3 code/hash_prefix_budget_test.py
+python3 code/renyi_copy_tax_test.py
+python3 code/collision_split_bound_test.py
 ```
 
 The scripts are intended to make several possible failure modes easy to inspect:
@@ -41,5 +43,7 @@ The scripts are intended to make several possible failure modes easy to inspect:
 - cyclic or alphabet-dependent constant hierarchies.
 - inconsistent old-pattern refinement under growth of old support;
 - hash prefix budget overflow entering a fixed window instead of terminalizing.
+- incorrect Renyi conditioned-copy tax arithmetic;
+- collision-to-split estimates that secretly depend on ambient alphabet size.
 
 Expected logs are included under `outputs/`.

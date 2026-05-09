@@ -63,6 +63,8 @@ sunflower-public-normal-form/
 │   ├── constant_hierarchy_dag_test.py
 │   ├── old_queue_refinement_test.py
 │   ├── hash_prefix_budget_test.py
+│   ├── renyi_copy_tax_test.py
+│   ├── collision_split_bound_test.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
@@ -72,7 +74,9 @@ sunflower-public-normal-form/
 │   ├── transition_exhaustiveness.log
 │   ├── constant_hierarchy_dag.log
 │   ├── old_queue_refinement.log
-│   └── hash_prefix_budget.log
+│   ├── hash_prefix_budget.log
+│   ├── renyi_copy_tax.log
+│   └── collision_split_bound.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -204,6 +208,35 @@ and failed accumulation exits through bounded support without creating a token.
 
 Expected output is in
 [`outputs/hash_prefix_budget.log`](outputs/hash_prefix_budget.log).
+
+### Test 9: Renyi Copy-Tax Test
+
+```bash
+python3 code/renyi_copy_tax_test.py
+```
+
+This checks the finite-distribution inequality behind the conditioned-copy
+tax.  If every surviving public key has conditional event probability at least
+`rho`, the test verifies the lower bound involving `exp(-(m-1) H_m(K))`.  A
+negative control shows that the inequality can fail when the per-key `rho`
+condition is removed.
+
+Expected output is in
+[`outputs/renyi_copy_tax.log`](outputs/renyi_copy_tax.log).
+
+### Test 10: Collision Split-Bound Test
+
+```bash
+python3 code/collision_split_bound_test.py
+```
+
+This checks the one-coordinate inequality
+`Pr[split] = 3 sum_a p_a^2 (1-p_a) <= 3 Coll(p)` on deterministic and
+pseudo-random finite laws.  It also stretches the ambient alphabet with unused
+symbols and verifies that collision and split probabilities are unchanged.
+
+Expected output is in
+[`outputs/collision_split_bound.log`](outputs/collision_split_bound.log).
 
 ## Suggested Citation
 
