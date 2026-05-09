@@ -10,7 +10,7 @@ conditional framework has been independently verified.
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
 The repository is already public and timestamped by git commits and the
-`v0.1-audit` tag.  A formal release should wait until the open interface checks
+`v0.2-audit` tag.  A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
