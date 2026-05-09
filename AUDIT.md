@@ -9,8 +9,8 @@ conditional framework has been independently verified.
 
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
-The repository is already public and timestamped by git commits and the
-`v0.7-audit` tag.  A formal release should wait until the open interface checks
+The repository is already public and timestamped by git commits and audit tags.
+A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
@@ -302,6 +302,27 @@ interface cannot claim progress merely from that dichotomy.  The real KL
 progress must be proved in the surrounding routing/conditioning/ledger
 statement.  This remains one of the most important open verification burdens.
 
+### Tuple-to-code transfer obstruction
+
+Script:
+
+```bash
+python3 code/tuple_to_code_obstruction.py
+```
+
+This diagnostic makes explicit an obstruction found in the earlier markdown
+notes.  A conditional tuple node can have a deterministic coordinate value
+after conditioning on an event such as `X_i = Y_i = a0`, while the same value
+has ambient code-law fibre mass only `1/q`.  Therefore a tuple-level heavy atom
+does not black-box transfer to a code-level heavy fibre with constant mass.
+
+Interpretation: this is a genuine large issue if the manuscript relies on a
+black-box tuple-to-code transfer.  The proposed repair path in the older notes
+is to stay in a tuple-level martingale/conditioned-copy framework, or to pay
+the global projected-shadow mass whenever such a conditional value is
+terminalized.  That repair path must be stated as an invariant and proved; it
+cannot be left implicit.
+
 ## Open Verification Burdens
 
 ### A. Local interface verification
@@ -320,7 +341,10 @@ The Renyi and collision arithmetic sublemmas now have finite-distribution audit
 tests.  The remaining burden is the routing/conditioning interface which brings
 actual transition-system laws into those sublemmas.
 
-The KL route diagnostic above is a warning that this item remains substantive.
+The KL route diagnostic and tuple-to-code obstruction above are warnings that
+this item remains substantive.  In particular, the older markdown route does
+not support a black-box transfer from conditional tuple laws to ambient code
+fibres; it requires the stronger public tuple-level/shadow-mass interface.
 
 ### B. Exhaustiveness of the transition system
 

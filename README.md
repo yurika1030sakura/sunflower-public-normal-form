@@ -67,6 +67,7 @@ sunflower-public-normal-form/
 │   ├── collision_split_bound_test.py
 │   ├── ledger_random_walk_fuzzer.py
 │   ├── kl_route_diagnostic.py
+│   ├── tuple_to_code_obstruction.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
@@ -80,7 +81,8 @@ sunflower-public-normal-form/
 │   ├── renyi_copy_tax.log
 │   ├── collision_split_bound.log
 │   ├── ledger_random_walk_fuzzer.log
-│   └── kl_route_diagnostic.log
+│   ├── kl_route_diagnostic.log
+│   └── tuple_to_code_obstruction.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -270,6 +272,23 @@ the larger routing/conditioning/ledger interface, not by that dichotomy alone.
 
 Expected output is in
 [`outputs/kl_route_diagnostic.log`](outputs/kl_route_diagnostic.log).
+
+### Diagnostic: Tuple-to-Code Obstruction
+
+```bash
+python3 code/tuple_to_code_obstruction.py
+```
+
+This diagnostic records the obstruction identified in the older project notes:
+a heavy atom in a conditional tuple law need not be a heavy atom in the ambient
+code law.  In the toy model, conditioning on `X_i = Y_i = a0` makes the tuple
+node deterministic at that coordinate, while the ambient one-sample fibre mass
+is only `1/q`.  Thus black-box tuple-to-code heavy-fibre transfer is false; a
+proof must either keep tuple-level conditioning or pay the global projected
+shadow mass.
+
+Expected output is in
+[`outputs/tuple_to_code_obstruction.log`](outputs/tuple_to_code_obstruction.log).
 
 ## Suggested Citation
 

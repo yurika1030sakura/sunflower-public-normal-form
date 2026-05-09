@@ -5,7 +5,7 @@ This release candidate contains:
 - a conditional public-normal-form draft for entropy bookkeeping in sunflower
   bounds;
 - the TeX source and compiled PDF;
-- eleven executable audit scripts and one diagnostic script;
+- eleven executable audit scripts and two diagnostic scripts;
 - expected output logs for reproducibility.
 
 ## Status
@@ -33,6 +33,7 @@ python3 code/renyi_copy_tax_test.py
 python3 code/collision_split_bound_test.py
 python3 code/ledger_random_walk_fuzzer.py
 python3 code/kl_route_diagnostic.py
+python3 code/tuple_to_code_obstruction.py
 ```
 
 The scripts are intended to make several possible failure modes easy to inspect:
@@ -49,5 +50,6 @@ The scripts are intended to make several possible failure modes easy to inspect:
 - collision-to-split estimates that secretly depend on ambient alphabet size;
 - composed ledger traces that accumulate hash debt or exceed the old revisit cap.
 - KL-blind product-routing steps that still require a larger interface proof.
+- false black-box transfer from conditional tuple atoms to ambient code fibres.
 
 Expected logs are included under `outputs/`.
