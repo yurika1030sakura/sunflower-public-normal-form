@@ -61,6 +61,8 @@ sunflower-public-normal-form/
 │   ├── cylinder_compatibility_test.py
 │   ├── transition_exhaustiveness_checker.py
 │   ├── constant_hierarchy_dag_test.py
+│   ├── old_queue_refinement_test.py
+│   ├── hash_prefix_budget_test.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
@@ -68,7 +70,9 @@ sunflower-public-normal-form/
 │   ├── multilabel_hash_token.log
 │   ├── cylinder_compatibility.log
 │   ├── transition_exhaustiveness.log
-│   └── constant_hierarchy_dag.log
+│   ├── constant_hierarchy_dag.log
+│   ├── old_queue_refinement.log
+│   └── hash_prefix_budget.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -173,6 +177,33 @@ alphabet dependency.
 
 Expected output is in
 [`outputs/constant_hierarchy_dag.log`](outputs/constant_hierarchy_dag.log).
+
+### Test 7: Old-Queue Refinement Test
+
+```bash
+python3 code/old_queue_refinement_test.py
+```
+
+This checks that old-pattern atoms refine consistently when the old support
+`U` grows, and that a queued old-window block cannot survive a sample-label
+signature change unless it is first registered or charged.
+
+Expected output is in
+[`outputs/old_queue_refinement.log`](outputs/old_queue_refinement.log).
+
+### Test 8: Hash Prefix Budget Test
+
+```bash
+python3 code/hash_prefix_budget_test.py
+```
+
+This checks the stopped transcript rule for coordinate-production prefixes.  A
+window that reaches `2h` coordinates can return one hash token; a prefix whose
+next description would exceed `B_win` terminalizes before adding the coordinate;
+and failed accumulation exits through bounded support without creating a token.
+
+Expected output is in
+[`outputs/hash_prefix_budget.log`](outputs/hash_prefix_budget.log).
 
 ## Suggested Citation
 

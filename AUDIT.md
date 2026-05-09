@@ -10,7 +10,7 @@ conditional framework has been independently verified.
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
 The repository is already public and timestamped by git commits and the
-`v0.3-audit` tag.  A formal release should wait until the open interface checks
+`v0.4-audit` tag.  A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
@@ -171,6 +171,50 @@ Interpretation: this supports the claim that the constant hierarchy is not
 secretly depending on `k` or the ambient alphabet.  It does not replace a fully
 expanded constant table in the paper.
 
+### 8. Old-window queue refinement test
+
+Script:
+
+```bash
+python3 code/old_queue_refinement_test.py
+```
+
+This tests the normal-form convention for old-pattern atoms under growth of the
+old support `U`.  It accepts monotone growth when the old coordinates keep the
+same pattern values, and it rejects:
+
+- changing a previously paid old-coordinate pattern;
+- changing the sample-label signature while an old-window queue is unpaid;
+- adding a queued old-window block outside the old support.
+
+Interpretation: this supports the delayed old-window queue convention for the
+specific consistency failures that were previously ambiguous.  It does not
+prove the old-window analytic theorem.
+
+### 9. Hash prefix budget stopping test
+
+Script:
+
+```bash
+python3 code/hash_prefix_budget_test.py
+```
+
+This tests the stopped transcript rule for coordinate-production prefixes.  It
+checks three branches:
+
+- a full labelled window reaches `2h` coordinates and creates one hash token;
+- a prefix that would exceed `B_win` terminalizes on the projected prefix before
+  adding the coordinate and creates no token;
+- failed accumulation before `2h` exits through bounded support and creates no
+  token.
+
+The negative controls reject returning before `2h`, appending after
+terminalization, and using bounded-support exit after the window is already
+full.
+
+Interpretation: this supports the claim that long prefixes are paid by terminal
+shadow coordinates rather than being smuggled into a fixed hash window.
+
 ## Open Verification Burdens
 
 ### A. Local interface verification
@@ -206,8 +250,8 @@ The current manuscript imposes token-free checkpoints: a hash return may create
 one pending token attached to the returned residual block, but that token must
 be assigned before a child state or descendant hash window is entered.
 
-This needs continued stress testing, especially in multi-label and nested
-scale scenarios.
+This has been stress-tested for multi-label windows, stopped prefix budgets,
+and child-entry blocking.  Nested scale scenarios still deserve more testing.
 
 ### D. Constant hierarchy
 

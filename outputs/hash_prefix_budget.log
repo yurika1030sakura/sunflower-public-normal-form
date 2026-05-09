@@ -1,0 +1,14 @@
+Hash prefix budget stopping test
+full window: transcript=10, coords=4, token_created=True
+terminalized window: transcript=6, coords=2, terminalized=True, terminal_T=4, token_created=False
+bounded-support window: transcript=6, coords=2, bounded_support_exit=True, token_created=False
+
+negative controls:
+- hash return before 2h coordinates: rejected (cannot return before 2h coordinates)
+- append after prefix terminalization: rejected (closed window cannot accept more coordinates)
+- bounded-support exit after full window: rejected (full window should return, not bounded-support exit)
+
+Summary:
+- a full labelled window can return one hash token
+- a prefix that would exceed B_win terminalizes before adding a coordinate
+- failed accumulation exits through bounded support without creating a token

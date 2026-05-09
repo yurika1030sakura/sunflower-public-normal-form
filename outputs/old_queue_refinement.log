@@ -1,0 +1,17 @@
+Old-window queue refinement test
+support=[1, 2, 3, 4, 5]
+pattern={1: 'eq', 2: 'neq', 3: 'eq', 4: 'split', 5: 'neq'}
+signature=XZY
+registered incidences=4
+charged flushes=1
+queued blocks after signature change=[]
+
+negative controls:
+- inconsistent old-pattern refinement: rejected (pattern refinement changed old coordinate 1)
+- signature change without queue flush: rejected (signature changed with an unpaid old-window queue)
+- queue entry outside old support: rejected (queued block must lie in old support)
+
+Summary:
+- old support grows monotonically
+- old-pattern atoms refine without changing old coordinates
+- changing sample-label signature requires registering or charging the queue
