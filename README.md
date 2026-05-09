@@ -83,6 +83,8 @@ sunflower-public-normal-form/
 │   ├── ledger_random_walk_fuzzer.log
 │   ├── kl_route_diagnostic.log
 │   └── tuple_to_code_obstruction.log
+├── notes/
+│   └── tuple_martingale_shadow_interface.md
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -94,6 +96,10 @@ The tests use only the Python standard library.
 
 For the current verification status and open issues, see
 [`AUDIT.md`](AUDIT.md).
+
+For the proved mass-accounting substitute for the false tuple-to-code transfer,
+see
+[`notes/tuple_martingale_shadow_interface.md`](notes/tuple_martingale_shadow_interface.md).
 
 ### Test 1: Alphabet-Freeness Smoke Test
 

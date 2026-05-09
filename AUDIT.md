@@ -5,6 +5,14 @@ draft.  It is intentionally conservative: passing an item here means only that
 the stated local check has been inspected or tested, not that the whole
 conditional framework has been independently verified.
 
+The note
+[`notes/tuple_martingale_shadow_interface.md`](notes/tuple_martingale_shadow_interface.md)
+proves the mass-accounting replacement for the false black-box tuple-to-code
+transfer.  This closes the narrow question of whether conditional tuple
+probabilities can be kept until terminal projection.  It does not close the
+larger question of whether every local transition satisfies the required
+selector-charge hypotheses.
+
 ## Current Recommendation
 
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
@@ -322,6 +330,12 @@ is to stay in a tuple-level martingale/conditioned-copy framework, or to pay
 the global projected-shadow mass whenever such a conditional value is
 terminalized.  That repair path must be stated as an invariant and proved; it
 cannot be left implicit.
+
+The accompanying note
+[`notes/tuple_martingale_shadow_interface.md`](notes/tuple_martingale_shadow_interface.md)
+proves this repair as an abstract martingale/shadow-mass interface.  The
+remaining burden is not global mass accounting itself, but verifying that each
+local transition pays its selector entropy before invoking that interface.
 
 ## Open Verification Burdens
 

@@ -6,6 +6,7 @@ This release candidate contains:
   bounds;
 - the TeX source and compiled PDF;
 - eleven executable audit scripts and two diagnostic scripts;
+- a proof note for the tuple-level martingale shadow-mass interface;
 - expected output logs for reproducibility.
 
 ## Status
@@ -53,3 +54,9 @@ The scripts are intended to make several possible failure modes easy to inspect:
 - false black-box transfer from conditional tuple atoms to ambient code fibres.
 
 Expected logs are included under `outputs/`.
+
+The proof note
+`notes/tuple_martingale_shadow_interface.md` records the valid replacement for
+the false black-box tuple-to-code transfer: terminal tuple events are kept as
+global martingale events until projected shadow counting.  It is an interface
+proof, not a verification of every local transition.
