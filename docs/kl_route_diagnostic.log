@@ -1,0 +1,17 @@
+KL route diagnostic
+tau=0.2
+- uniform: max=0.010000, Coll=0.010000, KL(P||P)=0.000000, route=low-collision-hash
+  against uniform Q: KL=0.000000, route=low-collision-hash
+- spiky: max=0.600000, Coll=0.420000, KL(P||P)=0.000000, route=value-pin
+  against uniform Q: KL=0.297394, route=value-pin
+- medium: max=0.200000, Coll=0.169000, KL(P||P)=0.000000, route=value-pin
+  against uniform Q: KL=0.006939, route=value-pin
+
+Prefix crossing diagnostic
+prefix probabilities=[0.8, 0.1, 0.5, 0.5], lambda=0.7, first crossing=2
+The crossing calculation depends only on P-prefix masses, not on Q.
+
+Summary:
+- the atom/collision route is KL-blind
+- the first-crossing trigger is also KL-blind once P-prefix masses are fixed
+- product-KL progress must therefore be justified by the larger interface

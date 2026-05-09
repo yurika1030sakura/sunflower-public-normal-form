@@ -66,6 +66,7 @@ sunflower-public-normal-form/
 │   ├── renyi_copy_tax_test.py
 │   ├── collision_split_bound_test.py
 │   ├── ledger_random_walk_fuzzer.py
+│   ├── kl_route_diagnostic.py
 │   └── requirements.txt
 ├── outputs/
 │   ├── alphabet_stretch.log
@@ -78,7 +79,8 @@ sunflower-public-normal-form/
 │   ├── hash_prefix_budget.log
 │   ├── renyi_copy_tax.log
 │   ├── collision_split_bound.log
-│   └── ledger_random_walk_fuzzer.log
+│   ├── ledger_random_walk_fuzzer.log
+│   └── kl_route_diagnostic.log
 ├── CITATION.cff
 ├── LICENSE
 └── .gitignore
@@ -253,6 +255,21 @@ cap across many composed fresh/old/scale/hash/terminal sequences.
 
 Expected output is in
 [`outputs/ledger_random_walk_fuzzer.log`](outputs/ledger_random_walk_fuzzer.log).
+
+### Diagnostic: KL Route
+
+```bash
+python3 code/kl_route_diagnostic.py
+```
+
+This diagnostic records a remaining burden rather than a passed proof check.
+It shows that the elementary one-coordinate atom/collision dichotomy is
+KL-blind, and that a first-crossing trigger depends only on `P`-prefix masses
+once those masses are fixed.  Thus any product-KL progress must be justified by
+the larger routing/conditioning/ledger interface, not by that dichotomy alone.
+
+Expected output is in
+[`outputs/kl_route_diagnostic.log`](outputs/kl_route_diagnostic.log).
 
 ## Suggested Citation
 

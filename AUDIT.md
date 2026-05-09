@@ -10,7 +10,7 @@ conditional framework has been independently verified.
 Do not mint a Zenodo DOI or create a formal GitHub Release yet.
 
 The repository is already public and timestamped by git commits and the
-`v0.6-audit` tag.  A formal release should wait until the open interface checks
+`v0.7-audit` tag.  A formal release should wait until the open interface checks
 below are either verified or clearly separated into a smaller conditional
 statement.
 
@@ -282,6 +282,26 @@ a single hand-written trace.  It remains an abstract ledger fuzzer, not an
 analytic proof that every branch of a real family follows one of these
 transitions.
 
+## Diagnostic Warnings
+
+### Product-KL routing diagnostic
+
+Script:
+
+```bash
+python3 code/kl_route_diagnostic.py
+```
+
+This diagnostic confirms a structural warning: the one-coordinate
+atom/collision dichotomy used by the product-KL route is true for every
+one-coordinate law and does not use `KL(P||Q)`.  The first-crossing trigger,
+once written in terms of `P`-prefix masses, is also independent of `Q`.
+
+Interpretation: this is not a contradiction, but it means the product-KL
+interface cannot claim progress merely from that dichotomy.  The real KL
+progress must be proved in the surrounding routing/conditioning/ledger
+statement.  This remains one of the most important open verification burdens.
+
 ## Open Verification Burdens
 
 ### A. Local interface verification
@@ -299,6 +319,8 @@ interface must be checked directly from its hypotheses, including:
 The Renyi and collision arithmetic sublemmas now have finite-distribution audit
 tests.  The remaining burden is the routing/conditioning interface which brings
 actual transition-system laws into those sublemmas.
+
+The KL route diagnostic above is a warning that this item remains substantive.
 
 ### B. Exhaustiveness of the transition system
 
