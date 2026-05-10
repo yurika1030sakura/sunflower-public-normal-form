@@ -11,6 +11,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
 \newtheorem{remark}[theorem]{Remark}
 
 \newcommand{\C}{\mathcal C}
@@ -426,7 +427,20 @@ per-labelled-window budget, not a global per-branch budget, and a different
 sample label opens a different window with its own stopped transcript;
 \item every old-window queue carries one public sample-label signature, namely
 the ordered active triple/reservoir labels whose equality pattern is being
-recorded; old-pattern atoms are nested only while this signature is unchanged;
+recorded.  For the current persistent signature the public state carries an
+old-pattern domain $P\subseteq U$ on which the five-state equality pattern has
+already been paid.  Later old-pattern exposures with the same signature only
+reveal the pattern on $O\setminus P$ and then replace $P$ by $P\cup O$.
+Changing the active signature is not a free relabelling.  Before a different
+signature may be used on old-supported data, the current old window is either
+ended by a terminal, fresh, hash, scale, or old-incidence exit, or it is
+coarsened by the quotient-erasure rule of
+Theorem~\ref{hyp:witness-reset}.  In that quotient step the old pattern and
+the fresh witness labels are analysis data: they are not retained in the
+terminal sigma-algebra, and the continuing state keeps only the old support,
+the dyadic scale, the active public law, and the capped revisit counter vector.
+Pattern-support charges are not old close-pair incidences and do not enter the
+revisit counters;
 \item nonterminal nodes carry only a bounded active reservoir;
 \item every conditional one-sample law used at a tuple node is the law of an
 active sample label under a paid tuple event, and every conditioned copy is
@@ -565,7 +579,7 @@ public sample-label signature.
 Apply Theorem~\ref{hyp:old-window}.  The output is a terminal low-symbol
 shadow, a high-revisit terminal/pruning/hash exit, or a low-revisit
 continuation whose non-value transcript has been registered in the
-old-incidence ledger.
+old-incidence ledger or erased by the quotient rule.
 Bounded short windows remain in old-window mode through the delayed queue.
 \item Terminal mode.  A terminal node outputs a projected shadow and projects
 away all unpaid analysis-only data before the final entropy count.
@@ -751,12 +765,21 @@ copying clauses in Proposition~\ref{prop:transition-system}.  Fresh promotion
 is performed only by Lemma~\ref{lem:residual-support-promotion} and by bounded
 hash-support exits, both of which add public subsets of the current complement
 $[k]\setminus U$ to $U$; hence the promoted sets are disjoint along a branch.
-Old incidences are registered in Lemma~\ref{lem:old-residual-routing},
+Old-pattern support exposures and old close-pair incidences are separate
+accounts.  Lemma~\ref{lem:old-residual-routing} may expose the five-state
+pattern on a deterministic possible support $O$, but this only enlarges the
+pattern domain $P$ for the current persistent signature and debits the pattern-support
+account.  If the active witness signature changes before the window is closed,
+the branch is routed through the quotient-erasure rule of
+Theorem~\ref{hyp:witness-reset} rather than inheriting the pattern account for
+free.  The raw revisit counters are incremented only when
+an actual split old close-pair block has been determined on the current atom.  Those actual
+old incidences are registered in Lemma~\ref{lem:old-residual-routing},
 Theorem~\ref{hyp:old-window}, and Proposition~\ref{prop:delayed-old-queue};
-these are precisely the old-window continuations.  Each registration increments
-the raw revisit counter and debits the weighted old account, while the
-high-revisit exit stops the low-revisit regime when the raw counter reaches the
-cap.
+these are precisely the old-window continuations.  Each such registration
+increments the raw revisit counter and debits the weighted old account, while
+the high-revisit exit stops the low-revisit regime when the raw counter reaches
+the cap on a coordinate which is split in the current close-pair block.
 Proposition~\ref{prop:hash-ledger} and Lemma~\ref{lem:token-free-children}
 give the single-token and token-free-child rules for hash returns.  Finally,
 Proposition~\ref{prop:birth} enumerates the sources of
@@ -2015,9 +2038,11 @@ hold.
 It remains to certify the charge of nonterminal windows.  If a bounded support
 contains a fresh coordinate, promote the whole fresh part to $U$ and charge
 the fixed window cost to the fresh/old potential drop.  If the bounded support
-is contained in $U$, register its coordinates as old incidences; repetition
-above the revisit threshold triggers the high-revisit exit, while below that
-threshold the incidences are debited in $N_{\rm old}$.  If a surviving hash block
+is contained in $U$, first route it through the paid old-pattern support
+account and then register only the actual split close-pair block as old
+incidence; repetition above the revisit threshold triggers the high-revisit
+exit only on such an actual split coordinate, while below that threshold the
+incidences are debited in $N_{\rm old}$.  If a surviving hash block
 returns to residual repair, its window charge is carried as a pending charge
 of that returned block.  The residual node must leave residual mode before a
 new hash window can be opened from it.  Its first nonterminal exit is fresh
@@ -2081,8 +2106,9 @@ coordinate-producing exit for this labelled window, there are two cases.  When
 $B=\varnothing$, no labelled window has yet been opened and no hash transcript
 or token is retained.  When $B\ne\varnothing$,
 Proposition~\ref{prop:hash-ledger} classifies the current bounded set $B$: its
-fresh part is promoted, or if $B\subseteq U$ its old incidences are registered
-unless high revisit triggers.  That classification is a terminal exit from the
+fresh part is promoted, or if $B\subseteq U$ its old-pattern data are paid and
+its actual split old incidences are registered unless high revisit triggers on
+one of those split coordinates.  That classification is a terminal exit from the
 current hash window, so the same bounded transcript cannot be charged again.
 \end{proof}
 
@@ -2394,8 +2420,10 @@ If $S<\beta |L|$, the branch is still old-supported and
 Lemma~\ref{lem:old-residual-routing} applies directly to the deterministic old
 positive support $O=\{u\in U:\Prb[u\in W_L]>0\}$, which is a function of the
 public law rather than a random selector.  This exposes only old-coordinate
-pattern data and charges it to old incidences.  On each resulting atom the old
-split set $K=W_L$ is known inside the already paid old pattern.  Proposition~\ref{prop:sparse-residual-transition}
+pattern data and charges it to the old-pattern support account, not to the
+old close-pair revisit counters.  On each resulting atom the old split set
+$K=W_L$ is known inside the already paid old pattern; only the actual split
+block extracted from $K$ is registered as old incidence.  Proposition~\ref{prop:sparse-residual-transition}
 then separates deletion-trapped scale descents from old close-pair returns.
 The last sentence is part of the stated order and prevents the non-linear
 residual pressure $S\ge1$ from being used as a linear DRC input.
@@ -3166,17 +3194,23 @@ $W_L$ is nonempty pointwise.  Let
 \[
   O=\{u\in U:\Prb_\nu[u\in W_L]>0\}.
 \]
-Then $O$ is public.  Before any nonterminal continuation, $O$ is registered in
-the old-window incidence ledger and the five-state equality pattern on $O$ is
-exposed.  On every resulting positive-mass atom, either the registration
-triggers the high-revisit exit, or the atom determines the old split set
+Then $O$ is public.  Before any nonterminal continuation, the five-state
+equality pattern on $O$ is exposed through the old-pattern support ledger for
+the current sample-label signature.  This exposure is not an old close-pair
+incidence and does not increment the revisit counters.  On every resulting
+positive-mass atom, the atom determines the actual old split set
 $K=W_L\subseteq O$, which is nonempty, and produces an old close-pair block
 $K'\subseteq K$ with
 \[
   |K'|\ge |K|/3
 \]
-after relabelling.  The pattern cost is charged to the registered old
-incidences and hence decreases $\Phi_{\rm old}$ in the non-high-revisit case.
+after relabelling.  Only the coordinates of this actual split close-pair block
+are then offered to the old-window incidence ledger.  If registering $K'$
+would exceed the revisit cap, the crossing coordinate lies in $K'$ and hence
+has a genuine close-pair role on the current atom, so the high-revisit routing
+of Lemma~\ref{lem:high-revisit} applies.  Otherwise the incidences of $K'$ are
+debited in $N_{\rm old}$.  The pattern cost on $O$ is paid separately by the
+old-pattern support account in $\Phi_{\rm old}$.
 
 The same conclusion holds if a public old block $K\subseteq U$ is already
 known to be split on the branch; then one registers only $K$ and exposes its
@@ -3184,24 +3218,118 @@ three-role vector.
 \end{lemma}
 
 \begin{proof}
-The set $O$ is determined by the current public law.  Register the incidences
-of $O$ and expose the five-state pattern
+The set $O$ is determined by the current public law.  Let $\ell$ be the current
+persistent ordered sample-label signature and let $P\subseteq U$ be the
+old-pattern domain already paid for that signature in the current window.
+Expose the five-state pattern only on the new part $O\setminus P$,
 \[
   XYZ,\quad XY|Z,\quad XZ|Y,\quad YZ|X,\quad X|Y|Z
 \]
-on $O$.  Since $W_L\subseteq O$ and $W_L$ is nonempty pointwise, the split
-coordinates on any positive-mass atom are exactly a nonempty set
-$K=W_L\subseteq O$.  If a coordinate crosses the revisit threshold, the
-exposed split label gives a close-pair revisit of that coordinate; the
-high-revisit exit is then the exhaustive terminal/pruning/hash routing of
-Lemma~\ref{lem:high-revisit}.  Otherwise these incidences are debited in
-$N_{\rm old}$, so they lower $\Phi_{\rm old}$ in
-Section~\ref{sec:potential}.  Among the split coordinates in $K$, one of the
-three roles $XY|Z,XZ|Y,YZ|X$ occurs on at least one third; relabelling the
-samples gives the close-pair block $K'$.
+and then replace $P$ by $P\cup O$.  This is a public refinement of
+the old-pattern atom for $\ell$.  Its entropy is charged to the old-pattern
+support account; no revisit counter is changed at this stage.
+
+Since $W_L\subseteq O$ and $W_L$ is nonempty pointwise, the split coordinates
+on any positive-mass atom are exactly a nonempty set $K=W_L\subseteq O$.
+Among the split coordinates in $K$, one of the three roles
+$XY|Z,XZ|Y,YZ|X$ occurs on at least one third; relabelling the samples gives
+the close-pair block $K'$.  Now, and only now, the proof attempts to register
+the incidences of $K'$.  If registering $K'$ would make some counter exceed
+the revisit threshold, that coordinate belongs to $K'$ and the exposed role
+gives a genuine close-pair revisit of it; the high-revisit exit is then the
+exhaustive terminal/pruning/hash routing of Lemma~\ref{lem:high-revisit}.
+Otherwise these actual split incidences are debited in $N_{\rm old}$, so they
+lower $\Phi_{\rm old}$ in Section~\ref{sec:potential}.
 
 If a public split block $K$ is already available, the same proof skips the
 five-state exposure on $O$ and exposes only the three-role vector on $K$.
+\end{proof}
+
+\begin{theorem}[Refreshed old-window quotient erasure]
+\label{hyp:witness-reset}
+Consider an old-supported window for a fixed old support $U$, dyadic scale,
+and persistent sample-label signature $\ell$.  Suppose a nonterminal
+continuation attempts to replace $\ell$ by fresh witness labels before the
+current old incidences have been registered or terminalized.  Then the proof is
+put in normal form as follows.  Either the branch takes one of the charged
+exits
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item a terminal multi-sample projected shadow;
+\item a fresh promotion, hash, product-KL, or deletion-trapped scale exit
+already covered by the corresponding local ledger;
+\item a persistent-reservoir return: after discarding a bounded amount of
+auxiliary data, all remaining old split incidences in the window are witnessed
+by one bounded reservoir, so Theorem~\ref{hyp:old-window} applies to actual
+split blocks for that fixed signature;
+\item an exponentially small witness-reset branch whose probability loss
+exceeds its auxiliary non-value transcript entropy and is therefore charged as
+a pruning-normalization loss.
+\end{enumerate}
+or the old-window transcript is quotiented before the new signature is used.
+In the quotient branch the proof forgets the old pattern, the fresh witness
+labels, and the order in which the old blocks were encountered.  The continuing
+public state retains only
+\[
+  U,\qquad \text{the dyadic old scale},\qquad
+  M=(M(i))_{i\in U}\in\{0,\ldots,Q\}^U,
+\]
+together with the terminal pins and hard-exit tokens already paid outside the
+old window.  All later selectors are required to be measurable with respect to
+the conditional law on this coarsened event and these retained variables.
+Consequently the erased witness/pattern transcript cannot select a later small
+terminal shadow.
+
+Across a whole old-support epoch, repeated quotient resets overwrite the same
+retained counter summary rather than appending a reset history.  The total
+old information retained from all such resets is therefore bounded by the final
+counter vector:
+\[
+  \bfH(M)\le |U|\log(Q+1),
+\]
+up to the fixed old-scale and queue labels.  Equivalently, if the proof ledger
+charges the counter update locally, the increase of this summary entropy is
+charged to the actual split incidences which changed $M$.  This is an
+$O_Q(|U|)$ old-support charge over the whole epoch, not a charge paid once per
+fresh signature.  The actual old close-pair incidences remain counted only
+through the coordinates of the split blocks which were registered before the
+quotient.  If one of those registrations would make $M(i)>Q$, then the crossing
+coordinate is in the current actual split close-pair block, and the
+high-revisit routing of Lemma~\ref{lem:high-revisit} applies before the
+quotient is taken.
+\end{theorem}
+
+\begin{proof}
+Let $\mathcal A$ be the finite or countable partition of the current node into
+old-window analysis atoms: old-pattern atoms, fresh witness-label choices, role
+vectors, and the order of the old blocks in the current window.  On each atom,
+the proof either has already taken one of the charged exits listed above, or it
+has merely registered actual split old incidences and has not exposed any old
+symbol value.  In the latter case define the quotient map
+\[
+  a\in\mathcal A
+  \longmapsto
+  (U,\mathrm{scale},M(a),\text{already paid terminal/hard-exit data}).
+\]
+Replace all atoms with the same image by their union.  The child law is, by
+definition, the conditional law on that union.  The later proof tree is then
+run from this conditional law using only public tie-breaks and selectors
+measurable with respect to the quotient state.  Hence the discarded
+witness-label and old-pattern transcript is not part of the terminal
+sigma-algebra and cannot choose a later coordinate shadow.
+
+The only nonconstant old information retained by the quotient is the current
+counter vector $M$.  Since each entry lies in $\{0,\ldots,Q\}$, the number of
+possible vectors is at most $(Q+1)^{|U|}$, giving the displayed entropy bound.
+If several quotient resets occur before the old support changes, the state does
+not retain the list of earlier vectors or signatures; it retains only the
+latest counter vector.  Thus the retained reset information over the epoch is
+still bounded by the same counter-vector entropy.  Fixed scale labels, bounded
+queues, and bounded reservoir labels contribute only a constant multiple of
+$|U|$ under the chosen finite-state parameters.  Finally, the quotient is taken
+only after all actual split incidences already seen have either been registered
+or have triggered high revisit.  Thus a high-revisit coordinate is always in
+the current actual split block, not merely in a possible support, so
+Lemma~\ref{lem:high-revisit} is invoked with its genuine close-pair hypothesis.
 \end{proof}
 
 \begin{theorem}[Old-symbol values are terminal-local]
@@ -3352,9 +3480,12 @@ claim.
 
 \begin{theorem}[Fixed-scale old-incidence cap]
 \label{hyp:old-window}
-Let $O_1,\ldots,O_R\subseteq U$ be public old blocks of one active scale and
-one public sample-label signature $\ell$ for the ordered active
-triple/reservoir labels, and let $N=\sum_r |O_r|$.  The window is run under the
+Let $O_1,\ldots,O_R\subseteq U$ be public actual split old close-pair blocks of
+one active scale and one public sample-label signature $\ell$ for the ordered
+active triple/reservoir labels, and let $N=\sum_r |O_r|$.  Deterministic
+possible-support sets used only to expose old equality patterns have already
+been charged to the old-pattern support account and are not members of this
+list.  The window is run under the
 normal-form rule of
 Theorem~\ref{thm:old-symbol-budget}: high-symbol common old values are not
 exposed by the old-window ledger.  Before any nonterminal continuation from an old block, the proof
@@ -3367,13 +3498,15 @@ grows.
 The signature $\ell$ is fixed throughout the window; if a transition changes the
 active sample-label signature before the incidences are registered, the current
 bounded queue is charged to that transition and cleared instead of being
-inherited.
+inherited.  A continuing old-supported branch with fresh witness labels must
+then be coarsened by Theorem~\ref{hyp:witness-reset}.
 Then one of the following occurs:
 \begin{enumerate}[label=\textup{(\arabic*)}]
 \item a low-symbol old value is exposed and the branch immediately terminalizes
 as in Theorem~\ref{thm:old-symbol-budget};
-\item high revisit: adding the current block would make some $M(i)>Q$, and the
-current close-pair coordinate is routed by Lemma~\ref{lem:high-revisit} into
+\item high revisit: adding the current actual split block would make some
+$M(i)>Q$, and the current close-pair coordinate is routed by
+Lemma~\ref{lem:high-revisit} into
 terminal value-shadow branches, a charged pruned complement, or a public
 low-collision hash coordinate;
 \item low-revisit continuation: every $M(i)\le Q$, no high-symbol old value is
@@ -3389,11 +3522,13 @@ old-incidence potential.
 \end{theorem}
 
 \begin{proof}
-The signature $\ell$ is part of the public old-window state, so all equality
+The persistent signature $\ell$ is part of the public old-window state, so all equality
 patterns, role vectors, and common-symbol vectors below refer to the same
 ordered active labels.  If a later transition replaces these labels before the
-window is charged, it is treated as the hard exit which clears the bounded queue;
-the old-pattern atom for $\ell$ is not reused for the new labels.
+window is charged, it is treated as the hard exit which clears the bounded
+queue, or else the old transcript is coarsened by
+Theorem~\ref{hyp:witness-reset}; the old-pattern atom for $\ell$ is not reused
+for the new labels.
 
 At a reached old block, first apply Theorem~\ref{thm:old-symbol-budget}.  If the
 common old-symbol vector has entropy at most $h|O_r|$, its value selector is
@@ -3403,8 +3538,9 @@ branch is high-symbol and the value vector is not a child selector.
 The only selectors exposed before continuation are the equality-pattern, role,
 scale, reservoir-label, and incidence data listed in the old rows of the global
 charge table.  By definition of $C_{\rm old}(Q,r_*)$, these cost at most
-$C_{\rm old}(Q,r_*)$ per registered old incidence.  If adding the incidences of
-$O_r$ would make some counter exceed $Q$, the current close-pair occurrence of
+$C_{\rm old}(Q,r_*)$ per registered actual split old incidence.  If adding the
+incidences of $O_r$ would make some counter exceed $Q$, then, because $O_r$ is
+an actual split old close-pair block, the current close-pair occurrence of
 that coordinate satisfies the hypothesis of Lemma~\ref{lem:high-revisit}; it
 yields terminal coordinate value pins, a charged pruned complement, or a public
 low-collision hash coordinate, which is alternative (2).  The current block is
@@ -3418,10 +3554,13 @@ counter exceeds $Q$, then
 \]
 The displayed cost bound follows.  Since high-symbol values were never exposed,
 this low-revisit continuation contributes only old-incidence transcript, and
-the weighted debit in $\Phi_{\rm old}=B_o|U|-N_{\rm old}$ pays it.  When these
+the weighted debit in $\Phi_{\rm old}=B_o|U|-N_{\rm old}-N_{\rm pat}$ pays it.
+When these
 incidences also create a continuing old active child, the same debit first
 reserves its rank and scale balances.  The remaining raw capacity condition is
-$N_{\rm old}\le Q\omega_{\rm old}|U|<B_o|U|$ in the constant hierarchy.
+$N_{\rm old}+N_{\rm pat}
+\le (Q\omega_{\rm old}+C_{\rm pat}(r_*))|U|<B_o|U|$
+in the constant hierarchy.
 \end{proof}
 
 Short old windows are still concatenated so that a branch cannot restart the
@@ -3430,8 +3569,9 @@ counter.
 
 \begin{proposition}[Delayed old-window queue]
 \label{prop:delayed-old-queue}
-Fix an old support $U$, a dyadic old scale, and a public sample-label signature
-$\ell$ for the ordered active triple/reservoir labels.  The proof maintains one
+Fix an old support $U$, a dyadic old scale, and a persistent public
+sample-label signature $\ell$ for the ordered active triple/reservoir labels.
+The proof maintains one
 public queue $\mathcal Q(\ell,U,\mathrm{scale})$ of old blocks of that scale and
 signature.  If the old support later grows from $U$ to $U^+$ while $\ell$ is
 unchanged, the same queued blocks are relabelled as a queue for
@@ -3441,7 +3581,11 @@ signature: the atom on $U^+$ is required to restrict to the already paid atom on
 $U$, and only the pattern on $U^+\setminus U$ for the same labels is newly
 exposed.  If a transition changes the active sample-label signature before the
 queue is registered, the bounded unpaid queue is assigned to that transition's
-local charge and cleared; it is not inherited by the new signature.  A bounded
+local charge and cleared; it is not inherited by the new signature.  A
+continuing old-supported branch with fresh witness labels must then pass
+through the quotient-erasure rule of Theorem~\ref{hyp:witness-reset}; a
+different signature is not allowed to expose a new full old-pattern atom for
+free.  A bounded
 short window is appended to the queue and is not charged separately.  The
 revisit count of a coordinate is cumulative over the whole queue, not over the
 last short window alone.  Once
@@ -3481,7 +3625,8 @@ every queued block contained in $U$ is exactly the previously paid atom, and
 relabelling a queue from $U$ to $U^+$ preserves the hypotheses of
 Theorem~\ref{hyp:old-window}.  The only new entropy is the five-state pattern on
 the newly promoted coordinates for the same labels, which is charged at the
-fresh promotion or old-incidence step which introduced them.
+fresh promotion or to the old-pattern support account before any old incidence
+counter is incremented.
 
 Concatenating short windows therefore preserves both publicness and scale.
 Coordinate multiplicities are counted in the concatenated list; hence high
@@ -3581,12 +3726,29 @@ coordinates already pinned in the public terminal projection; in single-block
 modes this is just the active block size.  The term $\Phi_{\rm rank}$ is the explicit form of the
 ``initial active-rank'' account used to birth the first active blocks and any
 DRC/split child whose size is a fixed fraction of its parent active rank.
-Let $I_{\rm old}$ be the raw cumulative
-old-window incidence count already registered on the current branch, capped by
-the high-revisit threshold through the coordinate counters $M(i)\le Q$.  After
-the fixed-window parameters $q,h,Q,r_*$ are chosen, let $C_{\rm fr}(q)$,
-$C_{\rm hash}$, and $C_{\rm old}(Q,r_*)$ denote the finite transcript constants
-specified in Section~\ref{sec:constant-hierarchy}, and put
+For the current persistent old-window signature, let $P\subseteq U$ be the
+old-pattern domain on which the five-state equality pattern has already been
+paid.  Let $N_{\rm pat}$ be the weighted cumulative old-pattern support charge:
+when a pattern is first exposed on $s$ new old coordinates for this persistent
+signature, $N_{\rm pat}$ increases by the corresponding finite cost.  A branch
+which attempts to replace the signature before closing the old window is not
+allowed to start a second independent pattern account.  It must first either
+take a charged hard exit or apply the quotient-erasure operation of
+Theorem~\ref{hyp:witness-reset}, which clears the live pattern transcript and
+retains only the capped counter vector.  Therefore
+\[
+  N_{\rm pat}\le C_{\rm pat}(r_*)|U|
+\]
+for the live signature on every branch.  This account pays possible-support
+pattern exposures and is not an incidence counter.
+
+Let $I_{\rm old}$ be the raw cumulative actual-split old-window incidence count
+already registered on the current branch, capped by the high-revisit threshold
+through the coordinate counters $M(i)\le Q$.  These incidences are only actual split
+close-pair coordinates after the relevant old-pattern atom has been fixed.
+After the fixed-window parameters $q,h,Q,r_*$ are chosen, let $C_{\rm fr}(q)$,
+$C_{\rm hash}$, $C_{\rm pat}(r_*)$, and $C_{\rm old}(Q,r_*)$ denote the finite
+transcript constants specified in Section~\ref{sec:constant-hierarchy}, and put
 \[
   \omega_{\rm old}:=C_{\rm old}(Q,r_*)+B_{\rm rk}+B_s+C_{\rm hash}+10 .
 \]
@@ -3594,7 +3756,7 @@ The old potential uses the weighted debit
 $N_{\rm old}:=\omega_{\rm old}I_{\rm old}$, not the raw incidence count.
 Choose constants
 \[
-  B_o>Q\,\omega_{\rm old}+C_{\rm aux}+10,
+  B_o>Q\,\omega_{\rm old}+C_{\rm pat}(r_*)+C_{\rm aux}+10,
   \qquad
   B_f-B_o>C_{\rm fr}(q)+C_{\rm hash}+B_{\rm rk}+B_s+10.
 \]
@@ -3604,7 +3766,7 @@ Put
   \qquad
   \Phi_{\rm fresh}=B_f|[k]\setminus U|,
   \qquad
-  \Phi_{\rm old}=B_o|U|-N_{\rm old},
+  \Phi_{\rm old}=B_o|U|-N_{\rm old}-N_{\rm pat},
   \qquad
   \Phi_{\rm scale}=B_s\sum_{\text{active }J}|J|.
 \]
@@ -3632,6 +3794,9 @@ $B_{\rm rk}(m-\theta_{\rm rk}m)$ before any residual selector cost is charged.
 Thus consuming old incidences decreases $\Phi_{\rm old}$ by the weighted debit,
 large enough to reserve child rank/scale balance and pay the local old
 transcript.
+Exposing old-pattern data on a deterministic possible support decreases
+$\Phi_{\rm old}$ through $N_{\rm pat}$ instead; it never increments
+$I_{\rm old}$ and therefore cannot by itself trigger high revisit.
 Promoting any
 public fresh set $F\subseteq [k]\setminus U$, including residual coordinates
 outside the current active block, to old support changes the first two terms by
@@ -3640,8 +3805,9 @@ outside the current active block, to old support changes the first two terms by
 \]
 so promotion is a genuine potential drop.  The high-revisit rule gives
 $I_{\rm old}\le Q|U|$ on nonterminal low-revisit branches, hence
-$N_{\rm old}\le Q\omega_{\rm old}|U|<B_o|U|$ before a terminal or
-bounded-support exit occurs.
+$N_{\rm old}+N_{\rm pat}
+\le (Q\omega_{\rm old}+C_{\rm pat}(r_*))|U|<B_o|U|$
+before a terminal or bounded-support exit occurs.
 
 \begin{lemma}[One-step account inequalities]
 \label{lem:step-account-inequalities}
@@ -3660,8 +3826,15 @@ births an active child $J\subseteq F$, then
 \]
 The same inequality without the child-balance term
 $(B_{\rm rk}+B_s)|J|$ applies when no child is born.
-\item If an old step registers $n\ge1$ old-coordinate incidences and births an
-active child $J$ with $|J|\le n$, then
+\item If an old-pattern step for one persistent sample-label signature exposes the
+five-state equality pattern on $s\ge1$ old coordinates which were not already
+in the corresponding pattern domain $P$, then the entropy of this
+possible-support exposure is charged by increasing $N_{\rm pat}$.  This step
+births no active child and does not alter $I_{\rm old}$ or the counters
+$M(i)$.  Before the live signature is closed or quotiented, the total such
+debit is bounded by $C_{\rm pat}(r_*)|U|$.
+\item If an old step registers $n\ge1$ actual split old-coordinate incidences
+and births an active child $J$ with $|J|\le n$, then
 \[
   \omega_{\rm old}n
   \ge
@@ -3766,8 +3939,9 @@ before old incidences are counted.
 
 \begin{lemma}[Old-incidence charge case]
 \label{lem:old-charge-case}
-Suppose a nonterminal old exit registers $n\ge1$ old-coordinate incidences and
-births a continuing active child $J$ with $|J|\le n$, allowing $J=\varnothing$.
+Suppose a nonterminal old exit registers $n\ge1$ actual split old-coordinate
+incidences and births a continuing active child $J$ with $|J|\le n$, allowing
+$J=\varnothing$.
 Let $\varepsilon_{\rm hash}\in\{0,1\}$ indicate whether this exit receives an
 assigned hash token.  The available old debit is
 \[
@@ -3781,14 +3955,18 @@ It satisfies
   +\varepsilon_{\rm hash}C_{\rm hash}+n .
 \]
 Consequently old-window role/signature/reservoir transcripts, old-born
-rank/scale deposits, high-revisit selector costs, and one possible hash token
-are all paid by the same registered-incidence debit.
+rank/scale deposits, high-revisit selector costs on genuinely split
+coordinates, and one possible hash token are all paid by the same
+registered-incidence debit.  Pattern exposure on a larger deterministic
+possible support $O$ is not included here; it is paid by the separate
+old-pattern support account.
 \end{lemma}
 
 \begin{proof}
 This is Lemma~\ref{lem:step-account-inequalities}(ii).  The low-revisit branch
 increments $N_{\rm old}$ by $\omega_{\rm old}n$, giving the displayed drop in
-$\Phi_{\rm old}=B_o|U|-N_{\rm old}$ while $U$ is fixed.  When $U$ grows, the
+$\Phi_{\rm old}=B_o|U|-N_{\rm old}-N_{\rm pat}$ while $U$ is fixed and
+$N_{\rm pat}$ is unchanged.  When $U$ grows, the
 increase $B_o|F|$ in $\Phi_{\rm old}$ has already been deducted in the fresh
 case through the net drop $(B_f-B_o)|F|$.
 \end{proof}
@@ -3975,8 +4153,10 @@ of $\Phi_{\rm old}$ before such transfers.  When $U$ increases, the increase
 $B_o|F|$ in
 $\Phi_{\rm old}$ is already included in the net fresh-promotion drop
 $(B_f-B_o)|F|$ above.
-The cap $N_{\rm old}\le Q\omega_{\rm old}|U|<B_o|U|$ keeps $\Phi_{\rm old}$
-nonnegative on nonterminal low-revisit branches.
+The cap
+$N_{\rm old}+N_{\rm pat}
+\le (Q\omega_{\rm old}+C_{\rm pat}(r_*))|U|<B_o|U|$
+keeps $\Phi_{\rm old}$ nonnegative on nonterminal low-revisit branches.
 
 For scale data, a deletion-trapped transition from $m$ to at most
 $\theta m$ has drop at least $B_s(1-\theta)m$ in the active scale potential.
@@ -4142,18 +4322,20 @@ The child code itself is the full value cylinder, so the non-value terminal
 transcript does not affect the cylinder-size estimate in
 Theorem~\ref{thm:shadow-potential}.  For the inherited ledger, deleting pinned
 coordinates from the terminal public state cannot increase the rank, fresh,
-old-incidence, or scale components of $\Phi$.  The rank and scale terms decrease
+old-pattern, old-incidence, or scale components of $\Phi$.  The rank and scale terms decrease
 because the child ambient and active blocks are smaller.  A
 deleted coordinate outside $U$ is removed from the current ambient
 $[k]\setminus U$, so the fresh term decreases by $B_f$.  The only nontrivial
 case is the old term.  If a deleted old coordinate $i$ has raw revisit counter
-$m_i\le Q$, deleting it changes
+$m_i\le Q$ and accumulated pattern-support charge at most $c_i$ with
+$\sum_{i\in U}c_i=N_{\rm pat}\le C_{\rm pat}(r_*)|U|$, deleting it changes
 \[
-  \Phi_{\rm old}=B_o|U|-\omega_{\rm old}I_{\rm old}
+  \Phi_{\rm old}=B_o|U|-\omega_{\rm old}I_{\rm old}-N_{\rm pat}
 \]
 by
 \[
-  -B_o+\omega_{\rm old}m_i\le -B_o+Q\omega_{\rm old}<0.
+  -B_o+\omega_{\rm old}m_i+c_i
+  \le -B_o+Q\omega_{\rm old}+C_{\rm pat}(r_*)<0.
 \]
 Deleting queued incidences is no worse: queued incidences which have not yet
 been debited were either assigned to the hard exit before terminal counting, or
@@ -4235,7 +4417,9 @@ the exact split exposure on a fixed $h$-block costs at most
 \item With $Q,r_*$, the old scale, and the sample-label signature fixed, the
 continuing old-window selectors have a finite per-incidence alphabet once
 high-symbol value vectors are not exposed.  Hence their total entropy is at
-most $C_{\rm old}(Q,r_*)n$ on a branch registering $n$ old incidences.
+most $C_{\rm old}(Q,r_*)n$ on a branch registering $n$ actual split old
+incidences.  Possible-support five-state pattern exposure is bounded
+separately by $N_{\rm pat}$.
 \end{enumerate}
 \end{lemma}
 
@@ -4319,8 +4503,12 @@ fresh residual &
 fresh equality pattern/support promotion &
 $C_{\rm fr}(q)|F|$ &
 fresh potential\\[1mm]
+old pattern support &
+five-state pattern on deterministic possible support $O$ &
+$\le \Delta N_{\rm pat}$ and no revisit counter is changed &
+old potential\\[1mm]
 old residual/window &
-sample-label signature, five-state pattern, role vector, incidence data; no
+sample-label signature, role vector, incidence data on actual split blocks; no
 high-symbol values &
 $\le \Delta N_{\rm old}$ after the fixed old debit is applied &
 old potential\\[1mm]
@@ -4394,15 +4582,17 @@ Lemma~\ref{lem:old-residual-routing}, Proposition~\ref{prop:old-return-public},
 Theorem~\ref{thm:old-symbol-budget}, Theorem~\ref{hyp:old-window}, and
 Proposition~\ref{prop:delayed-old-queue}.  Low-symbol old values terminalize
 and are charged to the shadow row.  High-symbol old values are not selectors
-of the continuing old-window tree.  The remaining sample-label signature,
-equality-pattern, role, scale, reservoir-label, and incidence data are bounded
-by $C_{\rm old}(Q,r_*)$ per registered old incidence.  The weighted debit
-$\omega_{\rm old}$ also reserves any old-born rank and scale balances and any
-single hash token assigned to the nonempty old exit.  The delayed queue prevents
-the same bounded short window for a fixed signature from being repeatedly
-recharged without increasing the raw counter and hence $N_{\rm old}$; if the
-signature changes, the bounded queue is charged to that hard exit before it is
-cleared.
+of the continuing old-window tree.  Five-state equality patterns on
+deterministic possible supports are charged first to $N_{\rm pat}$ and do not
+enter the revisit counters.  After the actual split block has been determined,
+the remaining sample-label signature, role, scale, reservoir-label, and
+incidence data are bounded by $C_{\rm old}(Q,r_*)$ per registered actual split
+old incidence.  The weighted debit $\omega_{\rm old}$ also reserves any
+old-born rank and scale balances and any single hash token assigned to the
+nonempty old exit.  The delayed queue prevents the same bounded short window
+for a fixed signature from being repeatedly recharged without increasing the
+raw actual-split counter and hence $N_{\rm old}$; if the signature changes, the
+bounded queue is charged to that hard exit before it is cleared.
 When a high-revisit branch is routed by Lemma~\ref{lem:high-revisit} to a
 one-coordinate hash output rather than to terminal value pins or a charged
 pruned complement, the selector has fixed cost $O(1)$ by
@@ -4561,10 +4751,13 @@ the same active-rank certificate.
 Fresh residual blocks are paid by fresh/rank progress; in the bounded
 $|F|\le q$ case, Lemma~\ref{lem:residual-support-promotion} first promotes the
 nonempty split part $F_{\rm sp}$ before the fresh close-pair child is entered.
-Old residual blocks are paid by weighted old incidence, including the old-supported
-residual witness routing of Lemma~\ref{lem:old-residual-routing}.  Pooled close-pair blocks are paid by the
+Old residual possible-support patterns are paid by $N_{\rm pat}$; the actual
+old close-pair blocks extracted from them are paid by weighted old incidence,
+including the old-supported residual witness routing of
+Lemma~\ref{lem:old-residual-routing}.  Pooled close-pair blocks are paid by the
 incidence window which produced them.  High-revisit bounded-support blocks are
-paid by the repeated old incidences that triggered the high-revisit exit.
+paid by the repeated actual split old incidences that triggered the
+high-revisit exit.
 One-coordinate KL increments are not active scale chains.  A fixed hash return
 has size $h<m_0$ and is therefore bounded at the recurrence interface unless a
 later hard exit creates a larger active child; that later child is funded by the
@@ -4608,8 +4801,9 @@ $\rho\tau$, where $\rho=1/2-3\sqrt{\epsilon/2}$.  There is no
 constant-hierarchy condition
 involving the binary entropy of subsets of $L$: residual repair first promotes
 all possible fresh witnesses globally, and the remaining old-supported
-witnesses are paid by the old-incidence ledger rather than by exposing
-$W_L$.
+witnesses are either actual split incidences paid by the old-incidence ledger
+or analysis data erased by the quotient rule, rather than by exposing $W_L$ as
+a terminal selector.
 \item Choose the KL prefix threshold, an absolute fixed hash-window length
 $h$, and a cumulative hash transcript budget $B_{\rm win}$ so that
 Theorem~\ref{thm:positive-kl-public} feeds only bounded-prefix coordinates
@@ -4621,7 +4815,8 @@ atom of mass $\ge\beta$.
 threshold, the old revisit threshold $Q$, and reservoir size $r_*$.  These
 determine the finite constants
 \[
-  C_{\rm fr}(q),\qquad C_{\rm hash},\qquad C_{\rm old}(Q,r_*),
+  C_{\rm fr}(q),\qquad C_{\rm hash},\qquad
+  C_{\rm pat}(r_*),\qquad C_{\rm old}(Q,r_*),
 \]
 as follows.  $C_{\rm fr}(q)$ is chosen as a per-promoted-coordinate constant
 large enough to pay the maximum fresh selector/transcript entropy over the
@@ -4642,14 +4837,25 @@ entropy $B_{\rm win}$, the Renyi copy tax
 $2\bfH_3(T_G\mid P_0)\le 4B_{\rm win}+O(1)$, the exact split exposure
 $\log\sum_{r\le 6\beta h}\binom hr$ (or the cruder $h\log2$), and the bounded
 survival-scan bookkeeping in Theorem~\ref{thm:public-hash} and
-Proposition~\ref{prop:hash-ledger}.  $C_{\rm old}(Q,r_*)$ is the maximum
-old-window auxiliary transcript cost per old incidence before the revisit cap
-$Q$, including the sample-label signature, five-state pattern, three-role
-refinement, bounded reservoir labels, and the bounded queue-flush charge when
-the active signature changes.  It excludes old-born rank/scale deposits and a
-possible assigned hash token, which are paid by the later choice of
-$\omega_{\rm old}$.  All three are finite because $q,h,Q,r_*$ and the window
-length are fixed constants.
+Proposition~\ref{prop:hash-ledger}.  The pattern-support constant
+$C_{\rm pat}(r_*)$ bounds all five-state equality-pattern exposure on
+deterministic old possible supports for one persistent old-window signature.
+A change of witness signature is handled by the quotient-erasure theorem,
+Theorem~\ref{hyp:witness-reset}.  Across an old-support epoch, the only retained
+nonconstant old information from such resets is the current capped counter vector
+$M\in\{0,\ldots,Q\}^U$, whose entropy is at most $|U|\log(Q+1)$.  Equivalently,
+for one live signature the cumulative weighted pattern-support charge satisfies
+$N_{\rm pat}\le C_{\rm pat}(r_*)|U|$.  This charge is separate from close-pair
+incidence and cannot trigger high revisit.  $C_{\rm old}(Q,r_*)$ is the
+maximum old-window auxiliary transcript cost per actual split old incidence
+before the revisit cap $Q$, including the sample-label signature, three-role
+refinement, bounded reservoir labels, the bounded queue-flush charge, and the
+incremental entropy of the quotient-reset counter summary.  It excludes
+possible-support pattern
+exposure, old-born rank/scale deposits, and a possible assigned hash token, which are
+paid by the later choice of $\Phi_{\rm old}$ and $\omega_{\rm old}$.  All four
+constants are finite because $q,h,Q,r_*$ and the window length are fixed
+constants.
 \item Choose the bounded-leaf scale
 $m_0>\max(q,h/\theta_{\rm rk},4/\beta,8/((1-\tau)\alpha))$ large enough that, for
 every scale $m\ge m_0$, the geometric scale drop
@@ -4672,7 +4878,7 @@ Then choose the old-incidence capacity coefficient
   \[
     \omega_{\rm old}:=C_{\rm old}(Q,r_*)+B_{\rm rk}+B_s+C_{\rm hash}+10,
     \qquad
-    B_o>Q\,\omega_{\rm old}+C_{\rm aux}+10,
+    B_o>Q\,\omega_{\rm old}+C_{\rm pat}(r_*)+C_{\rm aux}+10,
   \]
   and then choose the fresh
 coefficient $B_f$ so that
@@ -4757,8 +4963,8 @@ bounded-support hash exit.  Hence this step imposes no upper bound on
 $B_{\rm win}$ from later constants.
 
 After $q,h,Q,r_*$ and the old-window queue threshold are fixed, the constants
-$C_{\rm fr}(q)$, $C_{\rm hash}$, and $C_{\rm old}(Q,r_*)$ defined above are
-finite.  Since $4\sigma<1$, choose
+$C_{\rm fr}(q)$, $C_{\rm hash}$, $C_{\rm pat}(r_*)$, and
+$C_{\rm old}(Q,r_*)$ defined above are finite.  Since $4\sigma<1$, choose
 $m_0>\max(q,h/\theta_{\rm rk},4/\beta,8/((1-\tau)\alpha))$ so large that
 $B_s(1-4\sigma)m_0$ dominates $C_{\rm hash}$ and the finite additive constants
 of a single scale transition, and then choose $D_0$ for the finitely many
@@ -4777,19 +4983,22 @@ Then choose
 \[
   \omega_{\rm old}:=C_{\rm old}(Q,r_*)+B_{\rm rk}+B_s+C_{\rm hash}+10,
   \qquad
-  B_o>Q\,\omega_{\rm old}+C_{\rm aux}+10
+  B_o>Q\,\omega_{\rm old}+C_{\rm pat}(r_*)+C_{\rm aux}+10
 \]
 and
 \[
   B_f>B_o+C_{\rm fr}(q)+C_{\rm hash}+B_{\rm rk}+B_s+10 .
 \]
 These two inequalities are exactly the potential requirements used in
-Proposition~\ref{prop:global-charge}: $B_o>Q\omega_{\rm old}$ keeps
-$\Phi_{\rm old}=B_o|U|-N_{\rm old}$ nonnegative before high revisit because
-$N_{\rm old}=\omega_{\rm old}I_{\rm old}$ and $I_{\rm old}\le Q|U|$.  The
-weighted debit $\omega_{\rm old}$ pays old-incidence transcript, reserves any
-old-born rank and scale balances, and pays any single hash token assigned to that
-nonempty old exit, while
+Proposition~\ref{prop:global-charge}: the stronger old inequality keeps
+$\Phi_{\rm old}=B_o|U|-N_{\rm old}-N_{\rm pat}$ nonnegative before high revisit
+because $N_{\rm old}=\omega_{\rm old}I_{\rm old}$, $I_{\rm old}\le Q|U|$, and
+$N_{\rm pat}\le C_{\rm pat}(r_*)|U|$.  The pattern-support term pays
+five-state pattern exposure on deterministic possible supports; it does not
+enter the close-pair revisit counters.  The weighted debit $\omega_{\rm old}$
+pays actual old-incidence transcript, reserves any old-born rank and scale
+balances, and pays any single hash token assigned to that nonempty old exit,
+while
 $B_f-B_o>C_{\rm fr}(q)+C_{\rm hash}+B_{\rm rk}+B_s+10$ pays every fresh
 promotion together with any bounded hash charge after reserving the fresh-born
 rank and scale balances assigned to it.
@@ -4803,7 +5012,8 @@ above one may take
   C_*
   = C_{\rm abs}\max\{&
   C_{\rm sh},\ C_{\rm aux},\ C_\sigma+\log 3,\ B_s,\ 
-  C_{\rm rk},\ C_{\rm fr}(q),\ C_{\rm hash},\ C_{\rm old}(Q,r_*),\\
+  C_{\rm rk},\ C_{\rm fr}(q),\ C_{\rm hash},\ C_{\rm pat}(r_*),
+  C_{\rm old}(Q,r_*),\\
   &B_{\rm rk},\ \omega_{\rm old},\ B_o,\ B_f,\ r_*,\ 1\},
 \end{aligned}
 \]
@@ -4814,7 +5024,8 @@ optimize constants; it records the dependency graph.  In particular,
 \begin{align*}
   C_{\rm hash}&=C_0(B_{\rm win}+h+1),\\
   B_{\rm rk}&=O((B_s+C_{\rm rk}+C_{\rm hash}+1)/(1-\theta_{\rm rk})),\\
-  B_o&=O(Q(C_{\rm old}+B_{\rm rk}+B_s+C_{\rm hash}+1)+C_{\rm aux}+1),\\
+  B_o&=O(Q(C_{\rm old}+B_{\rm rk}+B_s+C_{\rm hash}+1)
+    +C_{\rm pat}+C_{\rm aux}+1),\\
   B_f&=B_o+O(C_{\rm fr}+C_{\rm hash}+B_{\rm rk}+B_s+1).
 \end{align*}
 Thus $C_*$ may be very large, but it depends only on the fixed hierarchy and
@@ -4870,8 +5081,10 @@ The old-supported sparse residual selector is no longer exposed as an unpaid
 atom of $W_L\subseteq L$.  Lemma~\ref{lem:residual-support-promotion} first
 promotes all possible fresh witnesses globally, and
 Lemma~\ref{lem:old-residual-routing} handles the remaining old-supported
-positive support by exposing only old-coordinate pattern data through the
-old-incidence ledger.
+positive support by exposing old-coordinate pattern data only as live analysis
+data for the current signature; actual split coordinates are registered in the
+old-incidence ledger, and refreshed signatures are coarsened by
+Theorem~\ref{hyp:witness-reset}.
 
 The global projected-shadow mass interface is supplied by
 Proposition~\ref{prop:tree-entropy-ledger},
