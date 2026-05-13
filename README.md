@@ -21,6 +21,21 @@ The intended conclusion is conditional on those local interfaces. The current
 version is meant to make the framework inspectable and falsifiable, rather than
 to ask the reader to accept an informal claim of a solved conjecture.
 
+## Which PDF to Read First
+
+Start with
+[`paper/sunflower_manuscriptversion.pdf`](paper/sunflower_manuscriptversion.pdf).
+This is the shorter, more readable manuscript-style version. It is meant to
+explain the retained-state mechanism, the fixed labelled hash window, and the
+global assembly in a linear form suitable for a first expert reading.
+
+The longer file
+[`paper/sunflower_public_normal_form_v1.pdf`](paper/sunflower_public_normal_form_v1.pdf)
+is the detailed audit version. It contains more of the interface bookkeeping,
+quotient-erasure clauses, and local ledger refinements. Readers who want to
+check the compressed local-transition statements in the readable manuscript
+should use the longer version and the audit scripts as supporting material.
+
 ## What Is Novel
 
 The individual tools are not new. Entropy-based sunflower arguments already
@@ -70,8 +85,10 @@ conjecture. In particular:
 sunflower-public-normal-form/
 ├── README.md
 ├── paper/
+│   ├── sunflower_manuscriptversion.pdf      ← shorter readable version
+│   ├── sunflower_manuscriptversion.tex
 │   ├── sunflower_public_normal_form_v1.pdf
-│   └── sunflower_public_normal_form_v1.tex
+│   └── sunflower_public_normal_form_v1.tex  ← longer audit version
 ├── code/
 │   ├── alphabet_stretch_test.py
 │   ├── worked_transition_example.py
