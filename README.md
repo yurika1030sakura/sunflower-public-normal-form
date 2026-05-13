@@ -29,11 +29,18 @@ This is the shorter, more readable manuscript-style version. It is meant to
 explain the retained-state mechanism, the fixed labelled hash window, and the
 global assembly in a linear form suitable for a first expert reading.
 
+For a still-readable version with the technical appendix included, use
+[`paper/sunflower_retained_state_annals_style_with_appendix.pdf`](paper/sunflower_retained_state_annals_style_with_appendix.pdf).
+This 24-page version keeps the same main narrative but adds retained-kernel,
+branchwise charge, close-pair/product-KL, hash-window, residual, old-window, and
+termination appendices. It is the better single file for a reader who wants more
+detail without opening the full audit draft.
+
 The longer file
 [`paper/sunflower_public_normal_form_v1.pdf`](paper/sunflower_public_normal_form_v1.pdf)
 is the detailed audit version. It contains more of the interface bookkeeping,
 quotient-erasure clauses, and local ledger refinements. Readers who want to
-check the compressed local-transition statements in the readable manuscript
+check the compressed local-transition statements in the readable manuscripts
 should use the longer version and the audit scripts as supporting material.
 
 ## What Is Novel
@@ -87,6 +94,8 @@ sunflower-public-normal-form/
 ├── paper/
 │   ├── sunflower_manuscriptversion.pdf      ← shorter readable version
 │   ├── sunflower_manuscriptversion.tex
+│   ├── sunflower_retained_state_annals_style_with_appendix.pdf
+│   ├── sunflower_retained_state_annals_style_with_appendix.tex
 │   ├── sunflower_public_normal_form_v1.pdf
 │   └── sunflower_public_normal_form_v1.tex  ← longer audit version
 ├── code/
