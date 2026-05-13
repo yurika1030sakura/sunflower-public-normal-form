@@ -30,22 +30,21 @@ explain the retained-state mechanism, the fixed labelled hash window, and the
 global assembly in a linear form suitable for a first expert reading.
 
 For the main technical check, use
-[`paper/sunflower_retained_state_annals_expanded_appendix.pdf`](paper/sunflower_retained_state_annals_expanded_appendix.pdf).
-This is the current preferred expanded version. It keeps the readable main
-narrative and adds the technical appendices for retained local-transition
-certificates, close-pair/product-KL routing, fixed labelled hash windows,
-residual and old-window transitions, token matching, branchwise charges,
-correctness-critical retained checks, numerical transfer, row-by-row
-telescoping, and inactive activation.
+[`paper/sunflow_appendix.pdf`](paper/sunflow_appendix.pdf).
+This is the standalone appendix extracted from the expanded version. It is
+meant to be read alongside the short manuscript and contains the technical
+appendices for retained local-transition certificates, close-pair/product-KL
+routing, fixed labelled hash windows, residual and old-window transitions,
+token matching, branchwise charges, correctness-critical retained checks,
+numerical transfer, row-by-row telescoping, and inactive activation.
 
-The longer file
+The longer audit file
 [`paper/sunflower_public_normal_form_v1.pdf`](paper/sunflower_public_normal_form_v1.pdf)
 is the detailed audit version. It contains more of the interface bookkeeping,
 quotient-erasure clauses, and local ledger refinements. Readers who want to
-check the compressed local-transition statements should use the expanded
+check the compressed local-transition statements should use the standalone
 appendix first, and then the longer audit version and audit scripts as
-supporting material. The earlier 24-page appendix and standalone critical
-appendix remain in `paper/` as focused intermediate versions.
+supporting material.
 
 ## What Is Novel
 
@@ -98,12 +97,8 @@ sunflower-public-normal-form/
 ├── paper/
 │   ├── sunflower_manuscriptversion.pdf      ← shorter readable version
 │   ├── sunflower_manuscriptversion.tex
-│   ├── sunflower_retained_state_annals_expanded_appendix.pdf
-│   ├── sunflower_retained_state_annals_expanded_appendix.tex
-│   ├── sunflower_retained_state_annals_style_with_appendix.pdf
-│   ├── sunflower_retained_state_annals_style_with_appendix.tex
-│   ├── retained_local_transition_critical_appendix.pdf
-│   ├── retained_local_transition_critical_appendix.tex
+│   ├── sunflow_appendix.pdf                 ← standalone technical appendix
+│   ├── sunflow_appendix.tex
 │   ├── sunflower_public_normal_form_v1.pdf
 │   └── sunflower_public_normal_form_v1.tex  ← longer audit version
 ├── code/
