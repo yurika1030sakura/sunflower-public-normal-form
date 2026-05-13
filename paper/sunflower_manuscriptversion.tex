@@ -205,7 +205,15 @@ The retained data of a nonterminal state consists only of:
 No discarded equality pattern, witness-label choice, or old block order belongs to the retained state unless it is encoded by one of the finite objects above.
 \end{definition}
 
-\begin{lemma}[Retained-state entropy]\label{lem:retained-entropy}
+\begin{convention}[Checkpoint-free retained transcript]\label{conv:checkpoint-free}
+The terminal retained transcript is not the chronological list of all retained states visited by the algorithm.  It is
+\[
+        Z_*=(\Theta_{\rm val},\Theta_{\rm eq},S_*),
+\]
+where $S_*$ is the final retained non-value state at the stopping leaf.  Monotone finite-state components, such as the old support $U$, capped old marks $M$, bounded old queues, scale labels, and pending-token status, are overwritten as the branch runs.  Intermediate values of these components are not transcript checkpoints.  If a later selector or terminal shadow depends on an intermediate value beyond what is determined by the current retained state and quotient law, then that intermediate data must first be promoted to terminal data, charged pruning, a hard-exit label, or an explicitly retained finite-state component.  Otherwise histories with the same terminal shadows and the same final retained state are identified in the terminal transcript.
+\end{convention}
+
+\begin{lemma}[Checkpoint-free retained-state entropy]\label{lem:retained-entropy}
 Let a finite retained-state tree terminate with terminal object
 \[
         Z_*=(\Theta_{\rm val},\Theta_{\rm eq},S_*)
@@ -214,15 +222,26 @@ where $\Theta_{\rm val}$ is the value-shadow data, $\Theta_{\rm eq}$ is equality
 \[
         \HH(\Theta_{\rm val},\Theta_{\rm eq})\le \HH(Z_*).
 \]
-Moreover, if the retained output at a transition has conditional entropy at most $c_v$ plus pruning loss $\ell^{\pr}_v$, then
+Moreover, if the non-overwritten retained outputs have conditional entropy at most $c_v$ plus pruning loss $\ell^{\pr}_v$, and each overwritten finite-state component is counted only when it leaves scope or at the terminal leaf, then
 \[
-        \HH(Z_*)+\E L_{\pr}\le \E\sum_{v\ {\rm reached}} c_v+\E L_{\pr}.
+        \HH(Z_*)+\E L_{\pr}
+        \le
+        \E\sum_{v\ {\rm reached}} c_v
+        +\E\,\HH(S_*\mid \Theta_{\rm val},\Theta_{\rm eq})
+        +\E L_{\pr}.
 \]
-Analysis-only variables which are quotiented before the next state do not appear in the right-hand side.
+Analysis-only variables which are quotiented before the next state, and overwritten checkpoint values which are not part of $S_*$, do not appear in the right-hand side.  In particular, if $S_*^{\old}$ denotes the final old-support component, then
+\[
+        \HH(S_*^{\old})
+        \le |U_*|+|U_*|\log(Q+1)+C_{\rm blk}|U_*|+O(1),
+\]
+not the entropy of the chronological sequence of old mark vectors.
 \end{lemma}
 
 \begin{proof}
-The terminal shadows are deterministic functions of $Z_*$.  For the second assertion, reveal only the retained labels along the reached path, not the full analysis atoms.  The chain rule gives the sum of the conditional entropies of the retained labels.  The quotient measurability condition ensures that later transition kernels are functions of the already revealed retained labels and their quotient laws; hence discarded atoms are not needed to reconstruct the distribution of future retained labels.  Adding pruning losses is an ordinary normalization account and does not require retaining the discarded branch.
+The terminal shadows are deterministic functions of $Z_*$.  For the entropy bound, first contract every maximal overwrite interval: within such an interval the process may update the current finite state, but the terminal transcript records only the value of that component when the interval leaves scope, or its final value at the leaf.  By the checkpoint-free convention, discarded analysis atoms and overwritten intermediate values are not used by any later selector except through the current retained state and quotient law.  Therefore replacing the interval by its final retained value does not change the distribution of terminal shadows or of later retained outputs.
+
+Apply the chain rule only to this contracted transcript.  Non-overwritten selector labels contribute the displayed $c_v$ terms.  The overwritten old, queue, scale, and token components contribute through the final state $S_*$.  For the old part, $U_*\subseteq[k]$ has at most $2^k$ possibilities, the capped vector $M_*:U_*\to\{0,\ldots,Q\}$ has at most $(Q+1)^{|U_*|}$ possibilities, and bounded queues/active blocks/role labels have at most $\exp(C_{\rm blk}|U_*|+O(1))$ possibilities.  This gives the displayed old-state entropy bound.  Adding pruning losses is an ordinary normalization account and does not require retaining the discarded branch.
 
 \end{proof}
 
@@ -573,6 +592,8 @@ where $C_{\rm blk}$ depends only on the bounded number of active old blocks, que
 Let $\mathcal A$ be the analysis transcript generated during the epoch: possible-support sets, five-state equality patterns, witness labels, role refinements, and the order in which sparse old blocks were inspected.  The quotient map sends each analysis atom to the retained output $S_{\old}^{\rm out}$, together with any terminal, pruning, or hard-exit data already paid outside the continuing old state.  By hypothesis, after this quotient no descendant selector and no later terminal shadow depends on the discarded part of $\mathcal A$.  Thus the retained entropy ledger records $\HH(S_{\old}^{\rm out}\mid U)$ for the epoch, not the entropy of the full internal path through the old patterns.
 
 It remains to count retained outputs.  The vector $M$ has at most $(Q+1)^{|U|}$ possibilities.  Each retained active old block or queue is encoded by a bounded number of per-coordinate states: absent, present with one of finitely many role/scale labels, or present in a bounded queue position.  Since the number of active blocks, queue positions, roles, scales, and sample-label signatures retained after quotienting is bounded by fixed constants, the number of such annotations is at most $\exp(C_{\rm blk}|U|+O(1))$.
+
+Repeated old quotients do not append a history of counter vectors.  They overwrite the same retained old component.  If the old support later grows, the global component is the final pair $(U_*,M_*)$ together with bounded queues and labels; the time at which each coordinate entered $U$ and the order of the mark increments are not terminal transcript variables unless separately promoted and paid.  Thus the support count is governed by $2^k(Q+1)^{|U_*|}\exp(C_{\rm blk}|U_*|+O(1))$, not by the number of nondecreasing paths of counter vectors.
 \end{proof}
 
 \begin{proposition}[Sparse old-supported retained kernel]\label{prop:sparse-old}
@@ -741,7 +762,7 @@ All deterministic tie-breaks are functions of the retained law and retained labe
 \begin{proposition}[Global retained-state closure]\label{prop:global-retained-closure}
 Start from any admissible retained state $S_0$ and run the retained process with the finite truncation of \Cref{prop:finite-truncation}.  Every terminal branch ends in one of the following retained outputs: a terminal value or equality shadow, a charged pruning branch, or a bounded ambient induction leaf.  Along each such branch,
 \[
-        \sum_{v\ {\rm reached}} c_v+L_{\pr}+\Phi(S_{\rm final})
+        \sum_{v\ {\rm reached}} c_v+L_{\pr}+\HH(S_{\rm final})+\Phi(S_{\rm final})
         \le \Phi(S_0)+C\bigl(T_{\rm val}+T_{\rm eq}+R\bigr),
 \]
 where $L_{\pr}$ is accumulated pruning loss, $T_{\rm val}$ and $T_{\rm eq}$ are the terminal projected value and equality-shadow sizes, and $R$ is the bounded reservoir/sample-label charge.
@@ -750,7 +771,7 @@ where $L_{\pr}$ is accumulated pruning loss, $T_{\rm val}$ and $T_{\rm eq}$ are 
 \begin{proof}
 Apply the local exhaustiveness theorem until the finite truncation stops the branch.  The retained output at each step is terminal data, monotone retained data, charged pruning, or an analysis partition erased by quotienting before continuation.  Value and equality exits contribute $T_{\rm val}$ and $T_{\rm eq}$.  Pruning contributes $L_{\pr}$.  Bounded ambient leaves are counted by the fixed finite-rank base case.
 
-It remains to check the account.  The one-step accounts in \Cref{prop:branch-charge} give the spent selector charge.  Fresh coordinates are promoted once.  Old-supported sparse renewals are grouped into old-support epochs and compressed by \Cref{lem:old-epoch-quotient}; hence the retained old contribution is the capped mark vector and bounded queues/blocks, not the internal sparse path transcript.  Scale deposits are paid before a child active block is entered by \Cref{prop:scale-birth}.  Each hash return carries one bounded token, and \Cref{conv:hash-token} assigns that token before a further child or hash window from the returned block is opened.  Thus spent potential plus the remaining terminal potential is at most the initial potential, up to the displayed terminal and reservoir charges.  Combining these disjoint accounts gives the inequality.  The truncation limit follows by monotone convergence as in \Cref{prop:finite-truncation}.
+It remains to check the account.  The one-step accounts in \Cref{prop:branch-charge} give the spent selector charge.  Fresh coordinates are promoted once.  Old-supported sparse renewals are grouped into old-support epochs and compressed by \Cref{lem:old-epoch-quotient}; hence the retained old contribution is the final capped mark vector and bounded queues/blocks, not the chronological sequence of old epoch outputs.  The entropy of this final old state is $O(|U_{\rm final}|)$ by \Cref{lem:retained-entropy}, and the constants in $\Phi_{\fr}+\Phi_{\old}$ are chosen to reserve this amount from the initial fresh/old budget.  Scale deposits are paid before a child active block is entered by \Cref{prop:scale-birth}.  Each hash return carries one bounded token, and \Cref{conv:hash-token} assigns that token before a further child or hash window from the returned block is opened.  Thus spent potential plus final retained-state entropy plus remaining terminal potential is at most the initial potential, up to the displayed terminal and reservoir charges.  Combining these disjoint accounts gives the inequality.  The truncation limit follows by monotone convergence as in \Cref{prop:finite-truncation}.
 \end{proof}
 
 \section{Assembly theorem}

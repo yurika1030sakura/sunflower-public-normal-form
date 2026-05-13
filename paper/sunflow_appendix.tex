@@ -116,6 +116,7 @@ The certificate is valid if
 \[
         \HH(Y\mid S)+\E[\ell_{\pr}(S,Y)\mid S]\le \E[c(S,Y)\mid S].
 \]
+For an overwrite component, such as the old counter vector or bounded old queues, validity is understood after contracting the maximal overwrite interval: intermediate values are current-state variables for running the process, but the terminal retained transcript records only the final value when the component leaves scope or the branch stops.
 \end{definition}
 
 \begin{lemma}[Quotient measurability]\label{lem:quotient-meas-app}
@@ -124,6 +125,18 @@ Suppose a transition certificate is valid and suppose that all future selection 
 
 \begin{proof}
 Condition on a retained label $Y=y$.  By definition the child law is the conditional law on the union of all analysis atoms mapped to $y$.  Every later selector is a deterministic function of this conditional law, the thresholds, and $y$.  Therefore the conditional distribution of the future retained process is the same whether one remembers the finer atom or only $y$.  Iterating over the tree gives the assertion by induction on depth.  Entropy cannot increase under the deterministic projection from the full analysis transcript to the retained terminal object.
+\end{proof}
+
+\begin{lemma}[Checkpoint-free overwrite reduction]\label{lem:app-overwrite}
+Let $S_t^{\rm ow}$ be a finite retained component updated during a maximal overwrite interval.  Suppose all future selectors during the interval are deterministic functions of the current value of $S_t^{\rm ow}$ and the quotient law, and suppose no terminal shadow depends on an earlier value of $S_t^{\rm ow}$ except through terminal data already recorded.  Then the terminal retained transcript may replace the chronological sequence
+\[
+        (S_0^{\rm ow},S_1^{\rm ow},\ldots,S_N^{\rm ow})
+\]
+by the final value $S_N^{\rm ow}$.  The entropy charged by this component is $\HH(S_N^{\rm ow})$, not $\HH(S_0^{\rm ow},\ldots,S_N^{\rm ow})$.
+\end{lemma}
+
+\begin{proof}
+Condition on the final value $S_N^{\rm ow}=s$ and on all terminal data recorded outside the overwrite component.  By hypothesis, any two internal histories with this same final retained value and terminal data induce the same quotient law for all selectors that remain after the interval, and no erased internal value can choose a later terminal shadow.  Therefore the projection which forgets the intermediate overwrite values is sufficient for the terminal sigma-algebra.  Entropy cannot increase under this projection, so the retained component contributes only the entropy of its final value.
 \end{proof}
 
 \begin{lemma}[Universal retained charge form]\label{lem:universal-charge}
@@ -465,7 +478,7 @@ Let $\mathcal A$ be the full analysis transcript formed by all possible supports
         =(M,\hbox{bounded queues},\hbox{active old blocks},
           \hbox{finite role/scale labels},\hbox{paid hard-exit data}).
 \]
-After quotienting, the child law is the conditional law on the union of all analysis atoms with the same value of $S_{\old}^{\rm out}$, and all later selectors are recomputed from this quotient law and the retained output.  Hence the retained tree records $S_{\old}^{\rm out}$, not the path transcript $\mathcal A$.
+After quotienting, the child law is the conditional law on the union of all analysis atoms with the same value of $S_{\old}^{\rm out}$, and all later selectors are recomputed from this quotient law and the retained output.  Successive old resets overwrite the same old component rather than appending checkpoints; by \Cref{lem:app-overwrite}, the terminal retained transcript records only the final old output when the epoch leaves scope.  Hence the retained tree records $S_{\old}^{\rm out}$, not the path transcript $\mathcal A$ and not the chronological sequence of intermediate old summaries.
 
 The output $S_{\old}^{\rm out}$ contains the capped vector $M\in\{0,\ldots,Q\}^{U}$, bounded queue positions, bounded active old blocks, finite role labels, finite scale labels, and at most one bounded token.  Each coordinate of $U$ has only finitely many possible annotations, and the number of active positions is bounded.  Thus the number of possible retained old outputs is at most $\exp(C_{\old}|U|+O(1))$.  Taking logarithms gives the entropy bound.  No term of the form
 \[
@@ -617,7 +630,7 @@ Choose the constants in the hierarchy so that the inequalities below hold.  For 
 \text{pruning:}            &\quad c_v+\ell_v^{\pr} &&\le C_{\pr}\ell_v^{\pr},                            &&\tag{T3}\label{eq:T3}\\
 \text{fresh promotion:}    &\quad c_v &&\le C_{\fr}|F_v|\le \tfrac12 B_f|F_v|,                            &&\tag{T4}\label{eq:T4}\\
 \text{old hard data:}      &\quad c_{\old}^{\rm hard} &&\le \omega_{\old}\sum_{i\in U}\Delta M(i),                  &&\tag{T5}\label{eq:T5}\\
-\text{old epoch quotient:} &\quad \HH(S_{\old}^{\rm out}\mid U) &&\le C_{\rm blk}|U|\le \tfrac12 B_o|U|,            &&\tag{T6}\label{eq:T6}\\
+\text{old overwrite output:} &\quad \HH(S_{\old}^{\rm out}\mid U) &&\le C_{\rm blk}|U|\le \tfrac12 B_o|U|,            &&\tag{T6}\label{eq:T6}\\
 \text{hash window:}        &\quad c_v &&\le C_{\rm hash}(B_{\win}+h)\le B_{\rm tok},                     &&\tag{T7}\label{eq:T7}\\
 \text{scale descent:}      &\quad c_v &&\le C_{\scal}|J_v|\le \tfrac12 B_s(1-\theta_{\scal})|J_v|,         &&\tag{T8}\label{eq:T8}\\
 \text{rank/DRC birth:}     &\quad c_v+B_s|J_v| &&\le \tfrac12 B_{\rk}(|I_v|-|I_{v+1}|),                  &&\tag{T9}\label{eq:T9}\\
@@ -632,7 +645,7 @@ where $\Delta\Phi$ is the total spent rank, fresh, old, scale, hash-token, and r
 \end{proposition}
 
 \begin{proof}
-The inequalities \eqref{eq:T1}--\eqref{eq:T3} are definitions of the terminal and pruning accounts.  For \eqref{eq:T4}, fresh coordinates are promoted only once; after promotion they leave the fresh reserve, so the losses $B_f|F_v|$ are disjoint along a branch.  Inequality \eqref{eq:T5} charges only hard old data retained after quotienting; that data is supported on actual split-coordinate mark increments, so it is paid by $\omega_{\old}\sum_i\Delta M(i)$, and each coordinate increments at most $Q$ times.  Inequality \eqref{eq:T6} is the epoch-level quotient bound of Lemma~\ref{lem:crit-old-entropy}: sparse old equality patterns are replaced by $S_{\old}^{\rm out}$ instead of being charged as a per-pattern path transcript.  The constant hierarchy chooses $B_o>2C_{\rm blk}+2Q\omega_{\old}+10$, so the old reserve pays both retained finite-state entropy and the debit of all mark increments without charging the internal sparse path entropy.
+The inequalities \eqref{eq:T1}--\eqref{eq:T3} are definitions of the terminal and pruning accounts.  For \eqref{eq:T4}, fresh coordinates are promoted only once; after promotion they leave the fresh reserve, so the losses $B_f|F_v|$ are disjoint along a branch.  Inequality \eqref{eq:T5} charges only hard old data retained after quotienting; that data is supported on actual split-coordinate mark increments, so it is paid by $\omega_{\old}\sum_i\Delta M(i)$, and each coordinate increments at most $Q$ times.  Inequality \eqref{eq:T6} is the overwrite-output bound of Lemmas~\ref{lem:app-overwrite} and \ref{lem:crit-old-entropy}: sparse old equality patterns and intermediate old summaries are replaced by the final old output $S_{\old}^{\rm out}$ instead of being charged as a chronological path transcript.  The row is applied once when the overwrite component leaves scope, or at the terminal leaf, not once per reset.  The constant hierarchy chooses $B_o>2C_{\rm blk}+2Q\omega_{\old}+10$, so the old reserve pays both retained finite-state entropy and the debit of all mark increments without charging the internal sparse path entropy.
 
 For \eqref{eq:T7}, the stopped key of a labelled hash window has entropy at most $B_{\win}$ and the exact split exposure on the returned block has size $O(h)$; the token budget $B_{\rm tok}$ is chosen larger than this fixed cost.  The token is assigned injectively to the first hard exit of the returned residual block, so it cannot be charged twice.  For \eqref{eq:T8}, a scale-only continuation decreases the dyadic scale by the fixed factor $\theta_{\scal}<1$, and $B_s$ is chosen after $C_{\scal}$.  For \eqref{eq:T9}, a DRC or close-pair child has size at most a fixed fraction of the parent active block; the parent rank drop pays both the selector and the scale deposit of the child.  Finally \eqref{eq:T10} is bounded because the active reservoir size is fixed once and for all.
 
