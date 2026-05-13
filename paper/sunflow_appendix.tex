@@ -449,14 +449,29 @@ Otherwise choose, by the fixed public order and a majority role tie-break, a non
 Now merge all analysis atoms which give the same retained label.  The child law is the conditional law on this union.  By the definition of retained transitions, all later choices are recomputed from this quotient law and the retained label.  Since the five-state pattern atom is not part of that label, it cannot later choose a terminal shadow, a hash key, or a DRC block.  This proves both the non-retention of $W$ as a selector and the child-measurability assertion.
 \end{proof}
 
-\begin{lemma}[Old-coordinate entropy is paid by the final retained state]\label{lem:crit-old-entropy}
-During one old-support epoch, suppose every nonterminal old coordinate block carried forward satisfies Lemma~\ref{lem:crit-sparse-no-selector}.  Conditional on the old support $U$, the total entropy of the old non-value information retained at the end of the epoch is at most $C_{\old}|U|+O(1)$, where $C_{\old}$ depends only on $Q$ and on the bounded queue/reservoir constants.
+\begin{lemma}[Old-epoch quotient entropy]\label{lem:crit-old-entropy}
+During one old-support epoch, suppose every sparse old-supported pattern is used only as an analysis partition, and that before any nonterminal child outside the epoch is entered every old coordinate block that can affect a future selector satisfies Lemma~\ref{lem:crit-sparse-no-selector}.  Conditional on the old support $U$, the entire internal old-pattern transcript of the epoch may be quotiented to a retained old output $S_{\old}^{\rm out}$ with
+\[
+        \HH(S_{\old}^{\rm out}\mid U)
+        \le C_{\old}|U|+O(1),
+\]
+where $C_{\old}$ depends only on $Q$ and on the bounded queue/reservoir constants.
 \end{lemma}
 
 \begin{proof}
-The final old state consists of the capped vector $M\in\{0,\ldots,Q\}^{U}$, bounded queue positions, bounded active old blocks, finite role labels, finite scale labels, and at most one bounded token.  Each coordinate of $U$ has only finitely many possible annotations, and the number of active positions is bounded.  Thus the number of possible final old states is at most $\exp(C_{\old}|U|+O(1))$.  Taking logarithms gives the entropy bound.
+Let $\mathcal A$ be the full analysis transcript formed by all possible supports $O$, five-state equality patterns on those supports, and actual split subsets inspected inside the epoch.  These objects are not retained labels.  The retained transition rule maps $\mathcal A$ to the quotient output
+\[
+        S_{\old}^{\rm out}
+        =(M,\hbox{bounded queues},\hbox{active old blocks},
+          \hbox{finite role/scale labels},\hbox{paid hard-exit data}).
+\]
+After quotienting, the child law is the conditional law on the union of all analysis atoms with the same value of $S_{\old}^{\rm out}$, and all later selectors are recomputed from this quotient law and the retained output.  Hence the retained tree records $S_{\old}^{\rm out}$, not the path transcript $\mathcal A$.
 
-The order in which analysis atoms were inspected and the full equality patterns on the sets $O$ are not part of the final state.  They were either terminalized or quotiented before continuation.  Hence their entropy is not included in the terminal retained object.
+The output $S_{\old}^{\rm out}$ contains the capped vector $M\in\{0,\ldots,Q\}^{U}$, bounded queue positions, bounded active old blocks, finite role labels, finite scale labels, and at most one bounded token.  Each coordinate of $U$ has only finitely many possible annotations, and the number of active positions is bounded.  Thus the number of possible retained old outputs is at most $\exp(C_{\old}|U|+O(1))$.  Taking logarithms gives the entropy bound.  No term of the form
+\[
+        \sum_{\ell}\log\binom{|O_\ell|}{|K_\ell|}
+\]
+is charged, because the individual sparse analysis atoms are erased before any future selector is allowed to depend on them.
 \end{proof}
 
 \begin{lemma}[High-revisit actual-coordinate routing]\label{lem:crit-high-revisit}
@@ -601,8 +616,8 @@ Choose the constants in the hierarchy so that the inequalities below hold.  For 
 \text{equality shadow:}    &\quad c_v &&\le C_{\rm eq}T^{\rm eq}_v+C_R,                                  &&\tag{T2}\label{eq:T2}\\
 \text{pruning:}            &\quad c_v+\ell_v^{\pr} &&\le C_{\pr}\ell_v^{\pr},                            &&\tag{T3}\label{eq:T3}\\
 \text{fresh promotion:}    &\quad c_v &&\le C_{\fr}|F_v|\le \tfrac12 B_f|F_v|,                            &&\tag{T4}\label{eq:T4}\\
-\text{old mark increment:} &\quad c_v &&\le C_{\old}|K_v|\le \tfrac12\omega_{\old}|K_v|,                  &&\tag{T5}\label{eq:T5}\\
-\text{old retained state:} &\quad \HH(S_{\old}\mid U) &&\le C_{\rm blk}|U|\le \tfrac12 B_o|U|,            &&\tag{T6}\label{eq:T6}\\
+\text{old hard data:}      &\quad c_{\old}^{\rm hard} &&\le \omega_{\old}\sum_{i\in U}\Delta M(i),                  &&\tag{T5}\label{eq:T5}\\
+\text{old epoch quotient:} &\quad \HH(S_{\old}^{\rm out}\mid U) &&\le C_{\rm blk}|U|\le \tfrac12 B_o|U|,            &&\tag{T6}\label{eq:T6}\\
 \text{hash window:}        &\quad c_v &&\le C_{\rm hash}(B_{\win}+h)\le B_{\rm tok},                     &&\tag{T7}\label{eq:T7}\\
 \text{scale descent:}      &\quad c_v &&\le C_{\scal}|J_v|\le \tfrac12 B_s(1-\theta_{\scal})|J_v|,         &&\tag{T8}\label{eq:T8}\\
 \text{rank/DRC birth:}     &\quad c_v+B_s|J_v| &&\le \tfrac12 B_{\rk}(|I_v|-|I_{v+1}|),                  &&\tag{T9}\label{eq:T9}\\
@@ -617,7 +632,7 @@ where $\Delta\Phi$ is the total spent rank, fresh, old, scale, hash-token, and r
 \end{proposition}
 
 \begin{proof}
-The inequalities \eqref{eq:T1}--\eqref{eq:T3} are definitions of the terminal and pruning accounts.  For \eqref{eq:T4}, fresh coordinates are promoted only once; after promotion they leave the fresh reserve, so the losses $B_f|F_v|$ are disjoint along a branch.  Inequality \eqref{eq:T5} follows from the rule that every old coordinate block carried forward is the support of an increment of the capped mark vector $M$; each coordinate increments at most $Q$ times.  Inequality \eqref{eq:T6} is the finite-state encoding bound for $M$, bounded queues, active old blocks, and finite role/scale labels.  The constant hierarchy chooses $B_o>2C_{\rm blk}+2Q\omega_{\old}+10$, so the old reserve pays both retained finite-state entropy and the debit of all mark increments.
+The inequalities \eqref{eq:T1}--\eqref{eq:T3} are definitions of the terminal and pruning accounts.  For \eqref{eq:T4}, fresh coordinates are promoted only once; after promotion they leave the fresh reserve, so the losses $B_f|F_v|$ are disjoint along a branch.  Inequality \eqref{eq:T5} charges only hard old data retained after quotienting; that data is supported on actual split-coordinate mark increments, so it is paid by $\omega_{\old}\sum_i\Delta M(i)$, and each coordinate increments at most $Q$ times.  Inequality \eqref{eq:T6} is the epoch-level quotient bound of Lemma~\ref{lem:crit-old-entropy}: sparse old equality patterns are replaced by $S_{\old}^{\rm out}$ instead of being charged as a per-pattern path transcript.  The constant hierarchy chooses $B_o>2C_{\rm blk}+2Q\omega_{\old}+10$, so the old reserve pays both retained finite-state entropy and the debit of all mark increments without charging the internal sparse path entropy.
 
 For \eqref{eq:T7}, the stopped key of a labelled hash window has entropy at most $B_{\win}$ and the exact split exposure on the returned block has size $O(h)$; the token budget $B_{\rm tok}$ is chosen larger than this fixed cost.  The token is assigned injectively to the first hard exit of the returned residual block, so it cannot be charged twice.  For \eqref{eq:T8}, a scale-only continuation decreases the dyadic scale by the fixed factor $\theta_{\scal}<1$, and $B_s$ is chosen after $C_{\scal}$.  For \eqref{eq:T9}, a DRC or close-pair child has size at most a fixed fraction of the parent active block; the parent rank drop pays both the selector and the scale deposit of the child.  Finally \eqref{eq:T10} is bounded because the active reservoir size is fixed once and for all.
 

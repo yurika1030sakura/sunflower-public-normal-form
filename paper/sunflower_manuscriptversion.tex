@@ -176,6 +176,10 @@ The lower bound on $\Prob(E)$ gives $M\le \exp(\lambda |J|+c)D^{k-|J|}\le D^k$.
 \section{Retained-state proof trees}
 
 The proof tree will use local analysis partitions.  The essential point is that analysis partitions need not become permanent transcript variables.
+In this section, ``rank'' always means the number of remaining coordinates in
+the current ambient cylinder code.  It is not a linear-algebraic rank.  An
+``active rank'' is the size of a public active coordinate block inside that
+ambient coordinate set.
 
 \begin{definition}[Retained transition]
 At a nonterminal state $\State$, a local transition consists of:
@@ -550,16 +554,25 @@ For an old support $U$, the old mark vector is a function
 Whenever an actual old coordinate block $K\subseteq U$ is used to create a nonterminal old continuation, the transition increments $M(i)$ for all $i\in K$, unless doing so would exceed $Q$, in which case the branch takes the high-revisit exit.  Active old blocks and bounded old queues may be retained, but every coordinate in them must be contained in the support of a mark increment at or before the time the block is first carried forward.
 \end{definition}
 
-\begin{lemma}[Coordinate-mark compression]\label{lem:mark-compression}
-Fix $U$ and $Q$.  Along any branch satisfying the old mark rule, the entropy of the retained non-value old coordinate data, conditional on $U$, is at most
+\begin{lemma}[Old-epoch quotient compression]\label{lem:old-epoch-quotient}
+Fix an old support $U$ and the cap $Q$.  Consider one old-support epoch, meaning a maximal interval of the retained process during which the old support is $U$ and sparse old-supported equality patterns are used only as analysis partitions before continuation.  Suppose that before any nonterminal child outside the epoch is entered, every old coordinate block that can affect a future selector is either terminalized, charged as pruning or a hard exit, or encoded in a retained old state
 \[
-        |U|\log(Q+1)+C_{\rm blk}|U|+O(1),
+        S_{\old}^{\rm out}
+        =(M,\hbox{bounded queues},\hbox{active old blocks},
+          \hbox{finite role/scale labels},\hbox{paid hard-exit data}).
+\]
+Suppose also that all future selectors are measurable with respect to the quotient law determined by $S_{\old}^{\rm out}$.  Then the whole internal old-pattern transcript of the epoch may be replaced by $S_{\old}^{\rm out}$ in the retained transcript.  Moreover
+\[
+        \HH(S_{\old}^{\rm out}\mid U)
+        \le |U|\log(Q+1)+C_{\rm blk}|U|+O(1),
 \]
 where $C_{\rm blk}$ depends only on the bounded number of active old blocks, queue labels, role labels, and scale labels.
 \end{lemma}
 
 \begin{proof}
-The vector $M$ has at most $(Q+1)^{|U|}$ possibilities.  Each retained active old block or queue is encoded by a bounded number of per-coordinate states: absent, present with one of finitely many role/scale labels, or present in a bounded queue position.  Since the number of active blocks, queue positions, roles, scales, and sample-label signatures retained at a nonterminal state is bounded by fixed constants, the number of such annotations is at most $\exp(C_{\rm blk}|U|+O(1))$.
+Let $\mathcal A$ be the analysis transcript generated during the epoch: possible-support sets, five-state equality patterns, witness labels, role refinements, and the order in which sparse old blocks were inspected.  The quotient map sends each analysis atom to the retained output $S_{\old}^{\rm out}$, together with any terminal, pruning, or hard-exit data already paid outside the continuing old state.  By hypothesis, after this quotient no descendant selector and no later terminal shadow depends on the discarded part of $\mathcal A$.  Thus the retained entropy ledger records $\HH(S_{\old}^{\rm out}\mid U)$ for the epoch, not the entropy of the full internal path through the old patterns.
+
+It remains to count retained outputs.  The vector $M$ has at most $(Q+1)^{|U|}$ possibilities.  Each retained active old block or queue is encoded by a bounded number of per-coordinate states: absent, present with one of finitely many role/scale labels, or present in a bounded queue position.  Since the number of active blocks, queue positions, roles, scales, and sample-label signatures retained after quotienting is bounded by fixed constants, the number of such annotations is at most $\exp(C_{\rm blk}|U|+O(1))$.
 \end{proof}
 
 \begin{proposition}[Sparse old-supported retained kernel]\label{prop:sparse-old}
@@ -580,11 +593,11 @@ Before any nonterminal child is entered, exactly one of the following happens:
 \item registering $K_0$ would exceed the cap $Q$, and the high-revisit hard exit is taken on an actual coordinate of $K_0$;
 \item the coordinates of $K_0$ are encoded as an increment of $M$, possibly also as a bounded queue or active old block; all other pattern data are quotiented.
 \end{enumerate}
-Thus repeated sparse renewal retains only the compressed old state of \Cref{lem:mark-compression}; no term of the form $\sum_\ell |O_\ell|$ enters the retained entropy.
+Thus repeated sparse renewal retains only the quotient-compressed old epoch state of \Cref{lem:old-epoch-quotient}; no term of the form $\sum_\ell |O_\ell|$ enters the retained entropy.
 \end{proposition}
 
 \begin{proof}
-The pattern on $O$ is an analysis variable, not a child selector.  It determines $K$ on each atom.  If the branch terminalizes, the only retained data are the terminal shadow and pruning loss.  If the cap is crossed, the crossing coordinate belongs to the current actual split block $K_0$, so the high-revisit exit is based on an actual close-pair revisit, not on possible support.  Otherwise increment $M$ on $K_0$ and retain only the finite role, queue, and scale labels needed for the next old-window transition.  The child law is the conditional law on the union of all atoms having the same updated retained state.  Future choices are recomputed from this law; the discarded equality pattern cannot later select a shadow or block.  The entropy bound is \Cref{lem:mark-compression}.
+The pattern on $O$ is an analysis variable, not a child selector.  It determines $K$ on each atom.  If the branch terminalizes, the only retained data are the terminal shadow and pruning loss.  If the cap is crossed, the crossing coordinate belongs to the current actual split block $K_0$, so the high-revisit exit is based on an actual close-pair revisit, not on possible support.  Otherwise increment $M$ on $K_0$ and retain only the finite role, queue, and scale labels needed for the next old-window transition.  At the end of the old epoch all analysis atoms with the same retained old output are merged.  The child law is the conditional law on this union, future choices are recomputed from this law, and the discarded equality pattern cannot later select a shadow or block.  The epoch entropy is therefore charged by \Cref{lem:old-epoch-quotient}, not by summing the entropies of the individual sparse subsets $K_0$.
 \end{proof}
 
 \section{Old windows, reservoirs, and scale birth}\label{sec:old-window}
@@ -619,7 +632,7 @@ The persistent sample-label signature and dyadic scale are part of the public st
 
 Otherwise the proof does not expose the common value vector on $O_r$.  The only nonterminal information extracted from $O_r$ is finite role, scale, queue and incidence data.  Attempt to increment $M(i)$ for each $i\in O_r$.  If some increment would make $M(i)>Q$, then this $i$ is in the current actual split close-pair block, not merely in a possible support.  Therefore \Cref{lem:high-revisit} applies to that actual coordinate and gives alternative (ii).  The current block is charged to that hard exit and is not inherited as a low-revisit block.
 
-If no cap is crossed, all incidences of $O_r$ are registered by the increments of $M$.  A bounded short window may be retained only as a bounded queue whose coordinate support is contained in already incremented marks.  Thus every coordinate identity used later is encoded in the retained state, and \Cref{lem:mark-compression} pays its entropy over the whole old-support epoch.  If the active signature changes, the previous signature's equality pattern has no meaning for the new labels.  Therefore the queue is either registered, terminalized, or charged to the signature-changing hard exit before being cleared; the child for the new signature is the quotient conditional law on the retained label.  This proves the alternatives and the assertion that no high-symbol old value vector is retained.
+If no cap is crossed, all incidences of $O_r$ are registered by the increments of $M$.  A bounded short window may be retained only as a bounded queue whose coordinate support is contained in already incremented marks.  Thus every coordinate identity used later is encoded in the retained state, and \Cref{lem:old-epoch-quotient} pays its retained entropy over the whole old-support epoch.  If the active signature changes, the previous signature's equality pattern has no meaning for the new labels.  Therefore the queue is either registered, terminalized, or charged to the signature-changing hard exit before being cleared; the child for the new signature is the quotient conditional law on the retained label.  This proves the alternatives and the assertion that no high-symbol old value vector is retained.
 \end{proof}
 
 
@@ -654,7 +667,7 @@ If $J$ is a fixed-fraction child of a parent active rank $m$, choose constants s
 
 This section proves the local theorem used in the assembly argument.  The alternatives are finite and mode-by-mode, and each transition is represented by one of the retained-state outputs accounted for below.
 
-\begin{theorem}[Retained local transition theorem]\label{thm:local-transition}
+\begin{theorem}[Retained local transition exhaustiveness]\label{thm:local-transition}
 At every nonterminal retained state generated by the rules below, one of the following retained exits is available, and the child law, if any, is the quotient law determined by the retained output.
 \begin{enumerate}[label=\textup{(\roman*)}]
 \item Inactive states use the collision dichotomy: terminal atom, low-collision near-sunflower residual activation, or public DRC close-pair activation.
@@ -665,7 +678,7 @@ At every nonterminal retained state generated by the rules below, one of the fol
 \item Old-window states use \Cref{prop:old-window}.
 \item Reservoir and conditioned-copy labels are reduced by \Cref{prop:reservoir}; new active scales are funded by \Cref{prop:scale-birth}.
 \end{enumerate}
-In particular, no future selector depends on an erased analysis pattern, no hash key contains an erased old-pattern atom, every random old coordinate set carried forward is encoded by $M$ or a bounded queue/active block, and every pending hash token is assigned before a child state is entered.
+With the fixed priority order in the transition rules, these alternatives form a partition of the generated retained modes: terminal value/equality atoms and charged pruning leave the branch, analysis-only partitions are quotiented before continuation, and every nonterminal child is one of the displayed retained outputs.  In particular, no future selector depends on an erased analysis pattern, no hash key contains an erased old-pattern atom, every random old coordinate set carried forward is encoded by $M$ or a bounded queue/active block, and every pending hash token is assigned before a child state is entered.
 \end{theorem}
 
 \begin{proof}
@@ -694,7 +707,7 @@ The precise constants are chosen in a hierarchy.  It is enough for the proof tha
         B_{\rk}(1-\theta_{\rk}) &> (B_s+C_{\rk}+C_{\rm hash}+10)\theta_{\rk},\\
         B_s(1-\theta_{\scal})m_0 &> C_{\rm hash}+C_{\scal}.
 \end{align*}
-Here $C_{\rm blk}$ is the finite per-old-coordinate retained-state constant in \Cref{lem:mark-compression}.
+Here $C_{\rm blk}$ is the finite per-old-coordinate retained-state constant in \Cref{lem:old-epoch-quotient}.
 
 \begin{proposition}[Branchwise retained charge]\label{prop:branch-charge}
 For every retained branch of the finite transition tree,
@@ -706,7 +719,7 @@ where $c_v$ is the retained selector charge at $v$, $\Delta\Phi$ is spent potent
 \end{proposition}
 
 \begin{proof}
-Terminal value and equality exits are charged to their shadow sizes.  Fresh exits use disjoint promoted sets and the fresh drop.  Old exits use mark increments; by \Cref{lem:mark-compression} and the cap $Q$, all retained old non-value data is paid by $B_o|U|-\omega_{\old}\sum_i M(i)$ together with the per-coordinate state constant.  Scale descents are geometric after a scale is born; births are paid by \Cref{prop:scale-birth}.  Hash windows contribute one bounded token and \Cref{conv:hash-token} assigns it injectively to the first hard exit of the returned block.  Reservoir labels are bounded by \Cref{prop:reservoir}.  Summing these disjoint accounts gives the inequality.
+Terminal value and equality exits are charged to their shadow sizes.  Fresh exits use disjoint promoted sets and the fresh drop.  Old exits are grouped into old-support epochs: the internal sparse old patterns are analysis-only, and \Cref{lem:old-epoch-quotient} charges only the quotient-compressed retained old output together with the capped mark debit.  Thus no path term of the form $\sum_v \log\binom{|O_v|}{|K_v|}$ appears in the retained transcript.  Scale descents are geometric after a scale is born; births are paid by \Cref{prop:scale-birth}.  Hash windows contribute one bounded token and \Cref{conv:hash-token} assigns it injectively to the first hard exit of the returned block.  Reservoir labels are bounded by \Cref{prop:reservoir}.  Summing these disjoint accounts gives the inequality.
 \end{proof}
 
 \begin{proposition}[Finite truncation]\label{prop:finite-truncation}
@@ -725,6 +738,21 @@ A fresh promotion strictly decreases $N_{\rm fresh}$ after depositing the old re
 All deterministic tie-breaks are functions of the retained law and retained labels.  If none of the displayed resources changes and no pruning/terminal event occurs, the next retained state would be identical to the present one and the deterministic transition would repeat the same choice; by the transition rules this is declared a bounded ambient leaf.  Thus finite depth truncations lose only explicitly pruned mass, whose normalization losses have already been recorded.  Letting the truncation depth tend to infinity preserves the entropy inequality by monotone convergence for the accumulated nonnegative pruning loss.
 \end{proof}
 
+\begin{proposition}[Global retained-state closure]\label{prop:global-retained-closure}
+Start from any admissible retained state $S_0$ and run the retained process with the finite truncation of \Cref{prop:finite-truncation}.  Every terminal branch ends in one of the following retained outputs: a terminal value or equality shadow, a charged pruning branch, or a bounded ambient induction leaf.  Along each such branch,
+\[
+        \sum_{v\ {\rm reached}} c_v+L_{\pr}+\Phi(S_{\rm final})
+        \le \Phi(S_0)+C\bigl(T_{\rm val}+T_{\rm eq}+R\bigr),
+\]
+where $L_{\pr}$ is accumulated pruning loss, $T_{\rm val}$ and $T_{\rm eq}$ are the terminal projected value and equality-shadow sizes, and $R$ is the bounded reservoir/sample-label charge.
+\end{proposition}
+
+\begin{proof}
+Apply the local exhaustiveness theorem until the finite truncation stops the branch.  The retained output at each step is terminal data, monotone retained data, charged pruning, or an analysis partition erased by quotienting before continuation.  Value and equality exits contribute $T_{\rm val}$ and $T_{\rm eq}$.  Pruning contributes $L_{\pr}$.  Bounded ambient leaves are counted by the fixed finite-rank base case.
+
+It remains to check the account.  The one-step accounts in \Cref{prop:branch-charge} give the spent selector charge.  Fresh coordinates are promoted once.  Old-supported sparse renewals are grouped into old-support epochs and compressed by \Cref{lem:old-epoch-quotient}; hence the retained old contribution is the capped mark vector and bounded queues/blocks, not the internal sparse path transcript.  Scale deposits are paid before a child active block is entered by \Cref{prop:scale-birth}.  Each hash return carries one bounded token, and \Cref{conv:hash-token} assigns that token before a further child or hash window from the returned block is opened.  Thus spent potential plus the remaining terminal potential is at most the initial potential, up to the displayed terminal and reservoir charges.  Combining these disjoint accounts gives the inequality.  The truncation limit follows by monotone convergence as in \Cref{prop:finite-truncation}.
+\end{proof}
+
 \section{Assembly theorem}
 
 \begin{theorem}[Retained-state assembly]\label{thm:assembly}
@@ -732,14 +760,15 @@ Choose constants as above.  There is a constant $D_0<\infty$, independent of $k$
 \end{theorem}
 
 \begin{proof}
-Run the retained transition tree from the uniform law on the code.  By \Cref{lem:retained-entropy} and \Cref{prop:branch-charge}, after finite truncation and letting the truncation error tend to zero,
+Run the retained transition tree from the uniform law on the code, with root retained state $S_{\rm root}$.  By \Cref{lem:retained-entropy} and \Cref{prop:global-retained-closure}, after finite truncation and letting the truncation error tend to zero,
 \[
-        \HH(Z_*)+\E L_{\pr}
-        \le C\,\E\bigl[T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta)+\Delta\Phi\bigr].
+        \HH(Z_*)+\E L_{\pr}+\E\Phi(S_{\rm final})
+        \le \Phi(S_{\rm root})
+        +C\,\E\bigl[T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta)\bigr].
 \]
-Therefore some terminal retained outcome has original mass at least
+Therefore some terminal retained outcome has original mass, including its inherited retained potential, at least
 \[
-        \exp\{-C(T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta))-C\Delta\Phi\}.
+        \exp\{-\Phi(S_{\rm root})-C(T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta))+\Phi(S_{\rm final})\}.
 \]
 If the terminal output contains a nonempty value shadow, apply \Cref{thm:value-shadow}; if it contains only an equality shadow, apply \Cref{thm:equality-shadow}.  The potential compatibility follows from the construction of the branch accounts: spent potential plus inherited cylinder-child potential is at most the parent potential, because all hash tokens, old queues, and scale births are assigned before terminal counting.  Strengthen the induction to
 \[

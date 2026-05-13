@@ -31,20 +31,12 @@ global assembly in a linear form suitable for a first expert reading.
 
 For the main technical check, use
 [`paper/sunflow_appendix.pdf`](paper/sunflow_appendix.pdf).
-This is the standalone appendix extracted from the expanded version. It is
-meant to be read alongside the short manuscript and contains the technical
-appendices for retained local-transition certificates, close-pair/product-KL
-routing, fixed labelled hash windows, residual and old-window transitions,
-token matching, branchwise charges, correctness-critical retained checks,
-numerical transfer, row-by-row telescoping, and inactive activation.
-
-The longer audit file
-[`paper/sunflower_public_normal_form_v1.pdf`](paper/sunflower_public_normal_form_v1.pdf)
-is the detailed audit version. It contains more of the interface bookkeeping,
-quotient-erasure clauses, and local ledger refinements. Readers who want to
-check the compressed local-transition statements should use the standalone
-appendix first, and then the longer audit version and audit scripts as
-supporting material.
+This is the standalone technical appendix. It is meant to be read alongside the
+short manuscript and contains the retained local-transition certificates,
+close-pair/product-KL routing, fixed labelled hash windows, residual and
+old-window transitions, token matching, branchwise charges,
+correctness-critical retained checks, numerical transfer, row-by-row
+telescoping, inactive activation, and active-block admissibility.
 
 ## What Is Novel
 
@@ -98,9 +90,7 @@ sunflower-public-normal-form/
 │   ├── sunflower_manuscriptversion.pdf      ← shorter readable version
 │   ├── sunflower_manuscriptversion.tex
 │   ├── sunflow_appendix.pdf                 ← standalone technical appendix
-│   ├── sunflow_appendix.tex
-│   ├── sunflower_public_normal_form_v1.pdf
-│   └── sunflower_public_normal_form_v1.tex  ← longer audit version
+│   └── sunflow_appendix.tex
 ├── code/
 │   ├── alphabet_stretch_test.py
 │   ├── worked_transition_example.py
@@ -172,8 +162,8 @@ Expected output is in [`outputs/alphabet_stretch.log`](outputs/alphabet_stretch.
 python3 code/worked_transition_example.py
 ```
 
-This runs a small-rank, large-alphabet ledger trace on a concrete balanced
-two-collision code of size 25 and rank `K=300`, with ambient alphabet stretched
+This runs a small-length, large-alphabet ledger trace on a concrete balanced
+two-collision code of size 25 and length `K=300`, with ambient alphabet stretched
 up to `K^10`. It traces representative public-normal-form transitions including
 close-pair activation, labelled hash production, hash return, fresh promotion,
 old-window registration, high revisit, deletion-trapped scale descent, and
