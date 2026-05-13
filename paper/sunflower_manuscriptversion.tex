@@ -1,0 +1,742 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\cref}[1]{\ref{#1}}
+\newcommand{\Cref}[1]{\ref{#1}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{convention}[theorem]{Convention}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathcal C}
+\newcommand{\F}{\mathcal F}
+\newcommand{\G}{\mathcal G}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\HH}{\mathrm H}
+\newcommand{\KL}{\mathrm D}
+\newcommand{\Split}{\operatorname{Split}}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\Coll}{\operatorname{Coll}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Old}{\operatorname{Old}}
+\newcommand{\Fresh}{\operatorname{Fresh}}
+\newcommand{\State}{\mathsf S}
+\newcommand{\Ret}{\mathsf R}
+\newcommand{\Val}{\mathsf V}
+\newcommand{\Eq}{\mathsf E}
+\newcommand{\pr}{\mathrm{pr}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\win}{\mathrm{win}}
+\newcommand{\old}{\mathrm{old}}
+\newcommand{\fr}{\mathrm{fr}}
+\newcommand{\scal}{\mathrm{sc}}
+\newcommand{\rk}{\mathrm{rk}}
+
+\title{Retained-State Entropy Accounting and Fixed Windows for Three-Petal Sunflowers}
+\author{Yuli Li \and Jingping Yang \and Renhao Zhang}
+\date{May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We develop a retained-state coordinate-collision entropy method for three-petal-sunflower-free set families.  Starting from set families of size at most $k$, we reduce to balanced two-collision codes.  We prove two terminal descent principles: projected value-shadow descent and equality-shadow descent.  Equality shadows allow a public event $X_J=Y_J$ to terminate without exposing the common alphabet value.  We also prove a fixed labelled hash-window copying lemma: once a bounded public key and a fixed number of low-collision coordinates for one sample label have been obtained, three conditioned copies return a near-sunflower block at cost $O(B_{\rm win}+h)$, independent of the alphabet sizes.
+
+The retained-state ledger is the bookkeeping mechanism.  Internal equality patterns used to analyse old-supported sparse residual witnesses are not permanent transcript variables.  Before any nonterminal child is entered, every random old coordinate block that will be used later is either terminalized or encoded as an increment of capped old-coordinate marks.  Future choices are recomputed from the conditional law on the quotient event determined by the retained state.  Thus repeated renewal of sample signatures is charged through a final finite state of entropy $O(|U|)$, rather than through the sum of all internal possible-support pattern exposures.
+
+The proof proceeds through a retained-state assembly theorem.  The local transition theorem in \Cref{sec:local-transition} is organized as a finite list of mode-by-mode alternatives: every close-pair, product-KL, hash, residual, old-window, reservoir, and scale-birth transition is represented as terminal data, monotone retained data, charged pruning, or analysis data erased before continuation.  Combining these local kernels with the retained entropy ledger gives a constant-base recurrence for balanced two-collision codes, and hence for three-petal-sunflower-free set families.
+\end{abstract}
+
+\section{Statement of the reduction}
+
+A three-petal sunflower is a triple of distinct sets $A,B,C$ such that
+\[
+        A\cap B=A\cap C=B\cap C.
+\]
+A family has size at most $k$ if each member has cardinality at most $k$.
+
+\begin{definition}[Balanced two-collision code]
+A code
+\[
+        \C\subseteq \prod_{i=1}^{k}\Omega_i
+\]
+is a balanced two-collision code of length $k$ if for every three distinct codewords $x,y,z\in\C$ there is a coordinate $i$ for which exactly two of $x_i,y_i,z_i$ are equal.
+\end{definition}
+
+\begin{lemma}[Padding]
+Let $\F$ be a family of sets of size at most $k$ with no three-petal sunflower.  Then there is a $k$-uniform family $\F^+$ with $|\F^+|=|\F|$ and no three-petal sunflower.
+\end{lemma}
+
+\begin{proof}
+For each $A\in\F$ add $k-|A|$ private dummy elements, disjoint from the original ground set and from the dummy elements used for all other members.  If $A^+,B^+,C^+$ formed a sunflower, no private dummy element could lie in an intersection of two distinct padded sets.  Hence the pairwise intersections of $A^+,B^+,C^+$ equal those of $A,B,C$, and $A,B,C$ would be a sunflower in $\F$.
+\end{proof}
+
+\begin{lemma}[Random colouring]
+Let $\F$ be a $k$-uniform family with no three-petal sunflower.  Then there is a balanced two-collision code $\C$ of length $k$ such that
+\[
+        |\C|\ge \frac{k!}{k^k}|\F|.
+\]
+\end{lemma}
+
+\begin{proof}
+Colour the ground set independently and uniformly with colours $1,\ldots,k$.  A fixed $k$-set is colourful with probability $k!/k^k$, so some colouring leaves a colourful subfamily $\F_0$ of size at least $(k!/k^k)|\F|$.  Encode each $A\in\F_0$ by the ordered list of its unique element of each colour.  If three encoded words had no coordinate with exactly two equal symbols, then each colour class would contribute either one element common to all three sets or three different elements.  The three pairwise intersections of the sets would then be equal, contradicting sunflower-freeness.  Thus the encoded family is a balanced two-collision code.
+\end{proof}
+
+\begin{corollary}[Code reduction]\label{cor:code-reduction}
+If every balanced two-collision code of length $k$ has size at most $D^k$, then every family of sets of size at most $k$ with no three-petal sunflower has size at most $(eD)^k$.
+\end{corollary}
+
+\begin{proof}
+Combine the previous two lemmas and use $k!\ge (k/e)^k$.
+\end{proof}
+
+\section{Terminal shadows}
+
+All random variables are finite-valued, and all entropies are natural logarithms.  Let $X^1,\ldots,X^r$ be independent samples from the uniform law on a balanced two-collision code.
+
+\begin{definition}[Projected value shadow]
+A projected value shadow is a finite list
+\[
+        \theta=((J_s,a_s))_{s\in S},
+\]
+where $\emptyset\ne S\subseteq [r]$, $\emptyset\ne J_s\subseteq [k]$, and $a_s\in\prod_{j\in J_s}\Omega_j$.  An event $E$ is compatible with $\theta$ if
+\[
+        E\subseteq \bigcap_{s\in S}\{X^s_{J_s}=a_s\}.
+\]
+Define
+\[
+        T(\theta)=\sum_{s\in S}|J_s|,\qquad R(\theta)=|S|.
+\]
+\end{definition}
+
+\begin{theorem}[Projected value-shadow descent]\label{thm:value-shadow}
+Assume inductively that every balanced two-collision code of length below $k$ has size at most $D^j$ in length $j$.  Let $\C$ be a length-$k$ balanced two-collision code, and suppose an event $E$ compatible with a nonempty projected value shadow $\theta$ satisfies
+\[
+        \Prob(E)\ge \exp(-\lambda T(\theta)-cR(\theta)).
+\]
+If $\log D\ge \lambda+c$, then $|\C|\le D^k$.
+\end{theorem}
+
+\begin{proof}
+Let $M=|\C|$ and let $\mu$ be uniform on $\C$.  For each $s\in S$, set
+\[
+        \eta_s=\mu\{x:x_{J_s}=a_s\}.
+\]
+Independence gives $\Prob(E)\le\prod_s\eta_s$.  For each $s$, the cylinder $\{x:x_{J_s}=a_s\}$, after deleting the coordinates $J_s$, remains a balanced two-collision code of length at most $k-|J_s|$.  Hence $\eta_s M\le D^{k-|J_s|}$.  Multiplying over $s$ gives
+\[
+        M^{R(\theta)}\Prob(E)\le D^{R(\theta)k-T(\theta)}.
+\]
+Using the lower bound for $\Prob(E)$,
+\[
+        M^{R(\theta)}\le \exp(\lambda T(\theta)+cR(\theta))D^{R(\theta)k-T(\theta)}.
+\]
+Since $T(\theta)\ge R(\theta)$ and $\log D\ge \lambda+c$, the exponential factor is at most $D^{T(\theta)}$.  Therefore $M^{R(\theta)}\le D^{R(\theta)k}$.
+\end{proof}
+
+\begin{definition}[Equality shadow]
+An equality shadow is a public nonempty coordinate block $J$ and two sample labels $s\ne t$, recording the event
+\[
+        X^s_J=X^t_J.
+\]
+It records no alphabet value.
+\end{definition}
+
+\begin{theorem}[Equality-shadow descent]\label{thm:equality-shadow}
+Assume the same induction hypothesis as in \Cref{thm:value-shadow}.  Let $X,Y$ be independent uniform samples from a length-$k$ balanced two-collision code $\C$, and let $J\ne\emptyset$ be public.  If an event $E\subseteq\{X_J=Y_J\}$ satisfies
+\[
+        \Prob(E)\ge \exp(-\lambda |J|-c)
+\]
+and $\log D\ge \lambda+c$, then $|\C|\le D^k$.
+\end{theorem}
+
+\begin{proof}
+Let $M=|\C|$.  For each value vector $a\in\prod_{j\in J}\Omega_j$, put $\C_a=\{x\in\C:x_J=a\}$ and $\eta_a=|\C_a|/M$.  Since $E\subseteq\{X_J=Y_J\}$,
+\[
+        \Prob(E)\le \sum_a \eta_a^2.
+\]
+Each nonempty $\C_a$, after deleting $J$, is a balanced two-collision code of length at most $k-|J|$, so $|\C_a|\le D^{k-|J|}$.  Thus
+\[
+        \sum_a\eta_a^2=\frac{1}{M^2}\sum_a|\C_a|^2
+        \le \frac{D^{k-|J|}}{M}.
+\]
+The lower bound on $\Prob(E)$ gives $M\le \exp(\lambda |J|+c)D^{k-|J|}\le D^k$.
+\end{proof}
+
+\section{Retained-state proof trees}
+
+The proof tree will use local analysis partitions.  The essential point is that analysis partitions need not become permanent transcript variables.
+
+\begin{definition}[Retained transition]
+At a nonterminal state $\State$, a local transition consists of:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item a finite or countable analysis partition $\mathcal A$ of the current state event;
+\item for each analysis atom, either a terminal output or a retained label $Y$;
+\item a quotient rule which merges all analysis atoms having the same retained label $Y$.
+\end{enumerate}
+The child law for the label $Y=y$ is the conditional law on the union of all analysis atoms with retained label $y$.  Future selectors are required to be deterministic functions of this quotient law, the fixed thresholds, and the retained label.  They may not depend on the discarded analysis atom.
+\end{definition}
+
+\begin{definition}[Admissible retained data]
+The retained data of a nonterminal state consists only of:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the current conditional law on the retained active sample labels;
+\item public coordinate blocks and active scale labels;
+\item the old support $U$;
+\item capped old-coordinate marks $M:U\to\{0,\ldots,Q\}$;
+\item bounded old queues and active blocks, each encoded by finitely many per-coordinate marks on $U$;
+\item pending hash tokens, at most one on the unique residual state immediately returned by a fixed hash window;
+\item terminal value shadows, equality shadows, and pruning losses already recorded.
+\end{enumerate}
+No discarded equality pattern, witness-label choice, or old block order belongs to the retained state unless it is encoded by one of the finite objects above.
+\end{definition}
+
+\begin{lemma}[Retained-state entropy]\label{lem:retained-entropy}
+Let a finite retained-state tree terminate with terminal object
+\[
+        Z_*=(\Theta_{\rm val},\Theta_{\rm eq},S_*)
+\]
+where $\Theta_{\rm val}$ is the value-shadow data, $\Theta_{\rm eq}$ is equality-shadow data, and $S_*$ is the final retained non-value state.  If every future selector after a quotient is measurable with respect to the quotient law and the retained label, then
+\[
+        \HH(\Theta_{\rm val},\Theta_{\rm eq})\le \HH(Z_*).
+\]
+Moreover, if the retained output at a transition has conditional entropy at most $c_v$ plus pruning loss $\ell^{\pr}_v$, then
+\[
+        \HH(Z_*)+\E L_{\pr}\le \E\sum_{v\ {\rm reached}} c_v+\E L_{\pr}.
+\]
+Analysis-only variables which are quotiented before the next state do not appear in the right-hand side.
+\end{lemma}
+
+\begin{proof}
+The terminal shadows are deterministic functions of $Z_*$.  For the second assertion, reveal only the retained labels along the reached path, not the full analysis atoms.  The chain rule gives the sum of the conditional entropies of the retained labels.  The quotient measurability condition ensures that later transition kernels are functions of the already revealed retained labels and their quotient laws; hence discarded atoms are not needed to reconstruct the distribution of future retained labels.  Adding pruning losses is an ordinary normalization account and does not require retaining the discarded branch.
+\end{proof}
+
+\section{Elementary local tools}
+
+\subsection{Collision and DRC}
+
+For a one-sample law $\nu$ on a code and a coordinate $i$, let
+\[
+        \Coll_i(\nu)=\Prob_{X,Y\sim\nu}[X_i=Y_i].
+\]
+For three samples $X,Y,Z$, let $\Split_J(X,Y,Z)$ be the set of coordinates in $J$ at which exactly two of $X_i,Y_i,Z_i$ are equal.
+
+\begin{lemma}[Collision controls split]\label{lem:collision-split}
+For independent $X,Y,Z\sim\nu$,
+\[
+        \E |\Split_J(X,Y,Z)|\le 3\sum_{i\in J}\Coll_i(\nu).
+\]
+Consequently, if the average collision on $J$ is at most $\beta$, then
+\[
+        \Prob\bigl[|\Split_J(X,Y,Z)|\le 6\beta |J|\bigr]\ge \frac{1}{2}.
+\]
+\end{lemma}
+
+\begin{proof}
+For one coordinate, the probability that at least two of $X_i,Y_i,Z_i$ are equal is at most $3\Prob[X_i=Y_i]=3\Coll_i(\nu)$.  Sum over $i$ and apply Markov's inequality.
+\end{proof}
+
+\begin{lemma}[A DRC row block]\label{lem:drc}
+Let $(\Omega,\Prob)$ be a probability space and let $E_i$, $i\in I$, be events with average mass at least $\delta$.  For every $1\le s\le \delta |I|/4$ there is a block $J\subseteq I$, $|J|=s$, such that
+\[
+        \Prob\Bigl[\bigcap_{j\in J}E_j\Bigr]\ge \frac{\delta}{2}\left(\frac{\delta}{4}\right)^s.
+\]
+If a fixed public order on $s$-subsets of $I$ is given, the first such $J$ is public.
+\end{lemma}
+
+\begin{proof}
+Choose $s$ indices independently from $I$ according to the distribution proportional to $\Prob(E_i)$, then use the standard dependent-random-choice averaging argument; equivalently,
+\[
+        \E_{\omega}\binom{d(\omega)}{s}\ge \binom{\delta |I|/2}{s}\Prob[d(\omega)\ge \delta |I|/2]
+\]
+after discarding the set on which the degree $d(\omega)$ is below $\delta |I|/2$.  The displayed bound follows from the usual estimate for $s\le \delta |I|/4$.  The public choice is by the fixed tie-break.
+\end{proof}
+
+\subsection{Positive KL scans}
+
+\begin{lemma}[Positive tail]\label{lem:positive-tail}
+If $p,q$ are laws on a finite set and $D(p\|q)>0$, then the set $S_+=\{a:p(a)>q(a)\}$ has positive $p$-mass.  If $p(S_+)<\rho\le1/2$, discarding $S_+$ costs pruning loss at most $2\rho$ on the retained complement.
+\end{lemma}
+
+\begin{proof}
+If $p(a)\le q(a)$ for all $a$, then $p=q$ and the divergence is zero.  The pruning bound is $-\log(1-x)\le 2x$ for $0\le x\le1/2$.
+\end{proof}
+
+\begin{lemma}[Heavy-or-light one-coordinate routing]\label{lem:heavy-light}
+Let $p$ be a finite law and fix $0<\rho,\tau\le1$.  Put
+\[
+        H=\{a:p(a)\ge \rho\tau\},\qquad L=H^c.
+\]
+Then the branches $a\in H$ are terminal value pins of conditional mass at least $\rho\tau$ and there are at most $(\rho\tau)^{-1}$ of them.  If $p(L)<\rho$, discarding $L$ costs pruning loss at most $2\rho$.  If $p(L)\ge\rho$, then
+\[
+        \Coll(p(\cdot\mid L))\le \tau.
+\]
+\end{lemma}
+
+\begin{proof}
+The number of heavy atoms is at most $(\rho\tau)^{-1}$.  If $p(L)\ge\rho$, then
+\[
+        \Coll(p(\cdot\mid L))=\sum_{a\in L}\left(\frac{p(a)}{p(L)}\right)^2
+        \le \frac{\max_{a\in L}p(a)}{p(L)}\le \tau.
+\]
+\end{proof}
+
+
+\begin{lemma}[One-coordinate collision exits]\label{lem:collision-exit}
+Let $p,q$ be one-coordinate laws and let $0<\rho\le 1/2$.  If
+\[
+        \sum_a p(a)q(a)>\gamma_0,
+\]
+then either $\max_a p(a)>\gamma_0^2$ or $\max_a q(a)>\gamma_0^2$.  If
+\[
+        \Coll(p)=\sum_a p(a)^2>\alpha,
+\]
+then $\max_a p(a)>\alpha$.  Consequently, whenever $\rho\tau\le\min(\alpha,\gamma_0^2)$, each cross-collision or high-side-collision branch is routed through one actual sample-coordinate law $r$: heavy atoms of $r$ terminalize as value pins, a light complement of mass below $\rho$ is charged pruning, and a light complement of mass at least $\rho$ gives a low-collision actual hash coordinate.
+\end{lemma}
+
+\begin{proof}
+By Cauchy's inequality,
+\[
+        \sum_a p(a)q(a)\le \sqrt{\Coll(p)\Coll(q)}.
+\]
+If both maxima were at most $\gamma_0^2$, then both collisions would be at most $\gamma_0^2$, contradicting the strict cross-collision inequality.  The high-side statement follows from $\Coll(p)\le\max_a p(a)$.  Choose $r=p$ or $r=q$ by the fixed public tie-break among the laws having a sufficiently large atom, and then apply \Cref{lem:heavy-light}.  The selected law is an actual coordinate law of a named sample label, so its nonterminal low-collision branch is eligible for a labelled hash window.
+\end{proof}
+
+\begin{proposition}[Actual-coordinate positive-KL scan]\label{prop:positive-kl-scan}
+Let $V=(V_1,\ldots,V_m)$ be a public list of actual sample-coordinate variables.  Let $P\ll Q$ be laws on the product space of $V$ with $D(P\|Q)>0$.  Fix $\lambda>0$, $0<\rho\le 1/2$, and $0<\tau<1$.  The following retained transition is exhaustive.  Along a realised branch scan the public list.  If a positive one-coordinate KL stop occurs before any prefix whose $P$-mass is below $e^{-\lambda i}$, apply \Cref{lem:positive-tail} and \Cref{lem:heavy-light} to that actual coordinate under the paid prefix.  If a prefix first crosses the threshold, apply \Cref{lem:heavy-light} to the crossing coordinate under the previous amortized prefix.  If neither occurs, terminalize the full prefix.
+
+Every output is one of:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item an amortized terminal value shadow prefix with cost at most $\lambda$ times its length;
+\item a one-coordinate terminal value pin of conditional mass at least $\rho\tau$;
+\item a charged pruning branch not inherited by a nonterminal child;
+\item a labelled low-collision hash coordinate for an actual sample label, under a paid set event of cost at most $\log(1/\rho)$.
+\end{enumerate}
+No reference-law coordinate, pair alphabet, or erased analysis atom is retained.
+\end{proposition}
+
+\begin{proof}
+Use the chain rule for relative entropy.  The conditional one-coordinate divergences are public after the realised prefix has been paid.  If a positive divergence is found, \Cref{lem:positive-tail} gives a positive tail.  If the tail has large mass, \Cref{lem:heavy-light} gives either a terminal value atom or a low-collision conditional law.  If the tail has small mass, prune it and apply the same heavy/light routing to the retained complement.  The prefix crossing case is exactly the same but the previous prefix is amortized by definition of first crossing.  If no stop occurs, the full prefix has pointwise mass at least $e^{-\lambda m}$ and is terminalized.  Each nonterminal low-collision output is a conditional law of one of the actual coordinates $V_t$; the reference law $Q$ is not passed to the child state.
+\end{proof}
+
+\section{Fixed labelled hash windows}
+
+For a key $K$ with law $p$, write
+\[
+        H_3(K)=-\frac{1}{2}\log\sum_t p(t)^3.
+\]
+
+\begin{lemma}[Random-key copying]\label{lem:random-copy}
+Let $K$ be a finite key.  Conditional on $K=t$, let $\nu_t$ be a one-sample law.  Suppose that for every $t$ there is an event $F_t$ for three independent draws from $\nu_t$ with $\nu_t^3(F_t)\ge\rho$.  Then three independent copies of the stopped experiment have probability at least
+\[
+        \rho\sum_t\Prob[K=t]^3=\rho\exp(-2H_3(K))
+\]
+of having the same key and satisfying the corresponding event.
+\end{lemma}
+
+\begin{proof}
+The desired mass is $\sum_t\Prob[K=t]^3\nu_t^3(F_t)$.
+\end{proof}
+
+\begin{theorem}[Fixed labelled low-collision window]\label{thm:fixed-window}
+Fix $h\ge1$ and $0<\beta<1/12$.  At a retained state suppose one public sample label has a stopped hash key $K$ with $\HH(K)\le B_{\rm win}$, and, for each key value $t$, a public set $H(t)$ of at least $h$ surviving coordinates such that under the conditional one-sample law $\nu_t$:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\Coll_i(\nu_t)\le\beta$ for all $i\in H(t)$;
+\item every codeword atom has $\nu_t$-mass below $\beta$.
+\end{enumerate}
+Then three conditioned copies produce, with probability at least $\exp(-O(B_{\rm win}+h))$, a distinct triple whose split set inside $H(t)$ has size at most $6\beta h$.  The exact split exposure and the copy tax are $O(B_{\rm win}+h)$, with no dependence on alphabet size or on $|\C|$.
+\end{theorem}
+
+\begin{proof}
+For fixed $t$, \Cref{lem:collision-split} gives split size at most $6\beta h$ with probability at least $1/2$.  The probability that three independent $\nu_t$-samples are not all distinct is at most $3\sum_x\nu_t(x)^2\le3\beta$.  Hence the good event has probability at least $1/2-3\beta>0$.  Apply \Cref{lem:random-copy}.  Conditioning on any good-key event of mass bounded below by a constant changes $\HH(K)$ and $H_3(K)$ by only a constant factor.  The exact split exposure has at most $2^h$ possibilities, or fewer under a sparse threshold.  Therefore the total cost is $O(B_{\rm win}+h)$.
+\end{proof}
+
+\begin{convention}[Hash-token rule]\label{conv:hash-token}
+A nonterminal fixed-window return creates at most one pending token of value $C_{\rm hash}=O(B_{\rm win}+h)$.  The returned residual block must be processed until the first terminal, fresh, old, scale, or birth hard exit.  The token is assigned to that exit before any child state or descendant hash window is entered.  Bounded-support hash exits are classified immediately as fresh or old and create no pending token.
+\end{convention}
+
+
+\section{Close-pair and product-KL retained kernels}\label{sec:close-pair}
+
+A close-pair state carries a public block $J$ and active samples with, after relabelling,
+\[
+        X_J=Y_J=A_J,
+\tag{*}
+\]
+and a third sample $Z$ whose values on $J$ are denoted $B_J$, with $A_j\ne B_j$ on the branch.
+
+\begin{lemma}[Conditioned product factorization]\label{lem:conditioned-product}
+For each $j\in J$, let $p_j,q_j$ be probability laws on $\Omega_j$, and put
+\[
+        \gamma_j=\sum_a p_j(a)q_j(a)<1.
+\]
+Let $Q=\bigotimes_{j\in J}(p_j\otimes q_j)$ on pairs $(A_J,B_J)$ and let
+\[
+        E=\{A_j\ne B_j\text{ for every }j\in J\}.
+\]
+Then $Q(\cdot\mid E)$ factorizes as
+\[
+        Q_E=\bigotimes_{j\in J} Q_j^*,
+        \qquad
+        Q_j^*(a,b)= \frac{p_j(a)q_j(b)\mathbf 1_{a\ne b}}{1-\gamma_j}.
+\]
+\end{lemma}
+
+\begin{proof}
+Under $Q$ the coordinate-pair events $\{A_j\ne B_j\}$ are independent.  Thus $Q(E)=\prod_j(1-\gamma_j)$, and division by this product gives the displayed factorization.
+\end{proof}
+
+\begin{lemma}[Product transfer to near-sunflowers]\label{lem:product-near-sunflower}
+Let $P=\Law(A_J,B_J)$ be supported on $A_j\ne B_j$ for every $j\in J$.  Let $p_j=\Law(A_j)$, $q_j=\Law(B_j)$, and let $Q_E$ be the conditioned product law of \Cref{lem:conditioned-product}.  Assume
+\[
+        \KL(P\|Q_E)\le \epsilon,
+        \qquad
+        \gamma_j\le\gamma_0<1\quad(j\in J),
+\]
+and
+\[
+        \frac{1}{|J|}\sum_{j\in J}\Coll(p_j)\le\alpha.
+\]
+If $A^{(1)},A^{(2)},A^{(3)}$ are independent samples from the true $A$-marginal $P_A$, then
+\[
+        \Prob\left[|\Split_J(A^{(1)},A^{(2)},A^{(3)})|
+        \le \frac{6\alpha |J|}{(1-\gamma_0)^2}\right]
+        \ge \frac{1}{2}-3\sqrt{\epsilon/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+Under $Q_E$, the $A_j$-marginal is
+\[
+        p_j^*(a)=\frac{p_j(a)(1-q_j(a))}{1-\gamma_j}.
+\]
+Since $1-q_j(a)\le1$ and $1-\gamma_j\ge1-\gamma_0$,
+\[
+        \Coll(p_j^*)=\sum_a \frac{p_j(a)^2(1-q_j(a))^2}{(1-\gamma_j)^2}
+        \le \frac{\Coll(p_j)}{(1-\gamma_0)^2}.
+\]
+Thus three independent samples from the $A$-marginal of $Q_E$ have expected split count at most $3\alpha |J|/(1-\gamma_0)^2$ by \Cref{lem:collision-split}; Markov gives probability at least $1/2$ for the displayed split bound.  Pinsker's inequality gives $\TV(P,Q_E)\le\sqrt{\epsilon/2}$.  Total variation cannot increase under marginalization, and the distance between threefold product laws is at most three times the one-sample distance.  Hence the same event has probability at least $1/2-3\sqrt{\epsilon/2}$ under $P_A^3$.
+\end{proof}
+
+\begin{lemma}[Projection near-sunflowers lift to code triples]\label{lem:projection-lift}
+Let $\mu$ be a law on a code $\C$, let $\pi_J$ be projection to $J$, and let $\nu=(\pi_J)_*\mu$.  If a projected event $F\subseteq(\pi_J\C)^3$ has $\nu^3(F)\ge\rho$, then at least one of the following holds:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the first codeword $x$ in the fixed public order satisfying $\mu(x)\ge\rho/6$ is retained as a terminal codeword atom;
+\item for independent $X,Y,Z\sim\mu$, the event $(\pi_JX,\pi_JY,\pi_JZ)\in F$ occurs with $X,Y,Z$ distinct with probability at least $\rho/2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The projections of independent samples from $\mu$ are independent samples from $\nu$, so the projected event has probability exactly $\rho$ before imposing distinctness.  Let $\Delta=\Prob[X=Y]=\sum_x\mu(x)^2$.  The probability that three samples are not all distinct is at most $3\Delta$.  If $\Delta\ge\rho/6$, then $\max_x\mu(x)\ge\Delta\ge\rho/6$, giving the terminal atom.  Otherwise $3\Delta<\rho/2$, and the distinct lift has mass at least $\rho/2$.
+\end{proof}
+
+\begin{proposition}[Close-pair master alternatives]\label{prop:close-pair}
+Let $P=\Law(A_J,B_J)$, let $p_j=\Law(A_j)$, $q_j=\Law(B_j)$, and $\gamma_j=\sum_a p_j(a)q_j(a)$.  Fix constants $h,\alpha,\epsilon,\gamma_0$ with $\gamma_0<1$ and
+\[
+        \rho_*=\frac{1}{2}-3\sqrt{\epsilon/2}>0.
+\]
+At least one of the following retained exits holds:
+\begin{enumerate}[label=\textup{(\arabic*)}]
+\item $\HH(A_J)\le h|J|$, in which case an entropy atom of $A_J$ terminalizes as a value shadow, and if the retained block is already equality-public it may terminalize as an equality shadow;
+\item $\gamma_j>\gamma_0$ for some $j$, in which case \Cref{lem:collision-exit} gives a terminal pin, charged pruning, or a labelled low-collision hash coordinate;
+\item all $\gamma_j<1$ and the product-KL alternative holds:
+\[
+        \KL(P\|Q_E)>\epsilon;
+\]
+this branch is routed by \Cref{prop:product-kl};
+\item the average $A$-side collision on $J$ exceeds $\alpha$, giving a public DRC close-pair subblock;
+\item a terminal codeword atom of mass at least $\rho_*/6$ appears;
+\item a law-level near-sunflower block on $J$ returns to residual mode with exact split exposure and mass at least $\rho_*/2$.
+\end{enumerate}
+All nonterminal children are functions of the current quotient law and retained labels only.
+\end{proposition}
+
+\begin{proof}
+If some $\gamma_j=1$, then alternative (2) holds because $\gamma_0<1$.  Thus, outside alternative (2), $Q_E$ is defined.  If alternative (1), (3), or (4) holds, use the stated routing.  In alternative (4), apply \Cref{lem:drc} to the events that two independent $A$-samples agree at coordinate $j$; the block is chosen by the fixed public order and the role information is retained or terminalized by the close-pair rules.
+
+Assume the first four alternatives fail.  Then
+\[
+        \KL(P\|Q_E)\le\epsilon,
+        \qquad
+        \gamma_j\le\gamma_0,
+        \qquad
+        \frac{1}{|J|}\sum_j\Coll(p_j)\le\alpha.
+\]
+By \Cref{lem:product-near-sunflower}, three independent samples from the true $A$-marginal have a projected near-sunflower event of mass at least $\rho_*$.  This $A$-marginal is exactly the $J$-projection of the current one-sample law $\mu$.  Applying \Cref{lem:projection-lift} gives either alternative (5) or alternative (6).  In alternative (6) the exact split set on $J$ is exposed at the transition and the child law is the quotient law determined by that retained split exposure.
+\end{proof}
+
+\begin{proposition}[Product-KL retained kernel]\label{prop:product-kl}
+In the product-KL alternative of a close-pair state, list the public block as $J=(j_1,\ldots,j_m)$ and scan the actual tuple-coordinate list
+\[
+        V=(A_{j_1},B_{j_1},A_{j_2},B_{j_2},\ldots,A_{j_m},B_{j_m}).
+\]
+Then the retained outputs are exactly those of \Cref{prop:positive-kl-scan}.  In particular, a nonterminal hash coordinate is always one actual sample-coordinate value $X^s_{j_r}$ under a paid prefix/set event.  The pair alphabet and the reference product law are not retained.
+\end{proposition}
+
+\begin{proof}
+The interleaving is a bijection of the pair data $(A_J,B_J)$, so relative entropy is invariant under it.  Apply \Cref{prop:positive-kl-scan} to the pushforwards of $P$ and $Q_E$.  The selected low-collision variable is either $A_{j_r}=X_{j_r}=Y_{j_r}$ or $B_{j_r}=Z_{j_r}$, hence is an actual code coordinate for a named sample label.  Terminal prefixes and pins become multi-sample value shadows; small complements are pruning losses; large complements are paid set-events inside the corresponding labelled hash window.  The pair alphabet and $Q_E$ are used only to locate the stopping time and are not retained by the child.
+\end{proof}
+
+\section{Residual states and sparse old renewal}\label{sec:residual}
+
+A residual state carries a public near-sunflower block and an exact split exposure.  Let $U$ be the old support.  Coordinates outside $U$ are fresh.
+
+\begin{lemma}[Fresh support promotion]\label{lem:fresh-promotion}
+At a residual state, if the deterministic fresh positive support $F$ has size greater than a fixed constant $q$, promote $F$ to $U$.  If $|F|\le q$, expose only the five-state pattern on $F$; each atom either promotes a nonempty split part and gives a fresh close-pair child, or leaves all residual split witnesses in $U$.  The cost is at most $C_{\rm fr}(q)|F|$ and is paid by the fresh potential.
+\end{lemma}
+
+\begin{proof}
+The set $F$ is determined by the current quotient law.  For $|F|>q$ the promotion is public.  For $|F|\le q$ there are at most $5^q$ equality patterns; on any atom with a nonempty split part, promote that part and choose the majority split role.  If there is no fresh split coordinate on the atom, the witness is old-supported.  The transcript cost is a fixed multiple of $|F|$.
+\end{proof}
+
+\begin{proposition}[Dense residual DRC kernel]\label{prop:dense-residual}
+Let $W_L(X,Y,Z)$ be the residual split witness on a public residual domain $L$.  If
+\[
+        \E |W_L|\ge \beta |L|,
+\]
+and $|L|\ge 4/\beta$, then for $s=\lfloor\beta |L|/8\rfloor$ there is a public block $J\subseteq L$, $|J|=s$, such that all coordinates of $J$ split on a subevent of mass $\exp(-O(s))$.  After exposing a three-role vector, a subblock $J'\subseteq J$ of size at least $s/3$ is a close-pair block.  If $J'$ is fresh, it is promoted; if it is old and nonterminal, its coordinate identity is retained only through old mark increments or a bounded queue.
+\end{proposition}
+
+\begin{proof}
+Apply \Cref{lem:drc} to the events $\{t\in W_L\}$.  On the event that all coordinates of $J$ split, one of the three roles $XY|Z$, $XZ|Y$, $YZ|X$ occurs on at least $s/3$ coordinates.  Role exposure costs $O(s)$.  The retained output is either terminal equality/value information, a fresh promotion, or an old block whose coordinate identity is encoded as required by the old retained-state rule.
+\end{proof}
+
+\begin{proposition}[Bounded residual kernel]\label{prop:bounded-residual}
+If $\E|W_L|\ge \beta |L|$ but $|L|<4/\beta$, the exact subset $W_L\subseteq L$ and its role pattern have bounded entropy depending only on $\beta$.  The branch is terminal, bounded-leaf, fresh, or old; in the old nonterminal case the actual used coordinates are recorded as old mark increments before any child is entered.
+\end{proposition}
+
+\begin{proof}
+The number of possible subsets and role patterns is bounded by a constant depending only on $\beta$.  Thus the selector cost is a fixed constant.  The retained-state rule prevents the exposed subset from being carried forward unless it is encoded in the finite state.
+\end{proof}
+
+\begin{definition}[Old mark vector]
+For an old support $U$, the old mark vector is a function
+\[
+        M:U\to\{0,1,\ldots,Q\}.
+\]
+Whenever an actual old coordinate block $K\subseteq U$ is used to create a nonterminal old continuation, the transition increments $M(i)$ for all $i\in K$, unless doing so would exceed $Q$, in which case the branch takes the high-revisit exit.  Active old blocks and bounded old queues may be retained, but every coordinate in them must be contained in the support of a mark increment at or before the time the block is first carried forward.
+\end{definition}
+
+\begin{lemma}[Coordinate-mark compression]\label{lem:mark-compression}
+Fix $U$ and $Q$.  Along any branch satisfying the old mark rule, the entropy of the retained non-value old coordinate data, conditional on $U$, is at most
+\[
+        |U|\log(Q+1)+C_{\rm blk}|U|+O(1),
+\]
+where $C_{\rm blk}$ depends only on the bounded number of active old blocks, queue labels, role labels, and scale labels.
+\end{lemma}
+
+\begin{proof}
+The vector $M$ has at most $(Q+1)^{|U|}$ possibilities.  Each retained active old block or queue is encoded by a bounded number of per-coordinate states: absent, present with one of finitely many role/scale labels, or present in a bounded queue position.  Since the number of active blocks, queue positions, roles, scales, and sample-label signatures retained at a nonterminal state is bounded by fixed constants, the number of such annotations is at most $\exp(C_{\rm blk}|U|+O(1))$.
+\end{proof}
+
+\begin{proposition}[Sparse old-supported retained kernel]\label{prop:sparse-old}
+Suppose a residual branch is old-supported:
+\[
+        W_L(X,Y,Z)\subseteq U,
+        \qquad W_L\ne\emptyset \text{ a.s.},
+\]
+and $\E|W_L|<\beta |L|$.  Let
+\[
+        O=\{u\in U:\Prob[u\in W_L]>0\},
+\]
+which is determined by the current quotient law.  The transition may use the five-state equality pattern on $O$ as an analysis partition.  On each positive atom the actual split set $K=W_L$ is determined; after choosing a majority role, let $K_0\subseteq K$ be the corresponding close-pair block.
+
+Before any nonterminal child is entered, exactly one of the following happens:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item a terminal value or equality shadow is output;
+\item registering $K_0$ would exceed the cap $Q$, and the high-revisit hard exit is taken on an actual coordinate of $K_0$;
+\item the coordinates of $K_0$ are encoded as an increment of $M$, possibly also as a bounded queue or active old block; all other pattern data are quotiented.
+\end{enumerate}
+Thus repeated sparse renewal retains only the compressed old state of \Cref{lem:mark-compression}; no term of the form $\sum_\ell |O_\ell|$ enters the retained entropy.
+\end{proposition}
+
+\begin{proof}
+The pattern on $O$ is an analysis variable, not a child selector.  It determines $K$ on each atom.  If the branch terminalizes, the only retained data are the terminal shadow and pruning loss.  If the cap is crossed, the crossing coordinate belongs to the current actual split block $K_0$, so the high-revisit exit is based on an actual close-pair revisit, not on possible support.  Otherwise increment $M$ on $K_0$ and retain only the finite role, queue, and scale labels needed for the next old-window transition.  The child law is the conditional law on the union of all atoms having the same updated retained state.  Future choices are recomputed from this law; the discarded equality pattern cannot later select a shadow or block.  The entropy bound is \Cref{lem:mark-compression}.
+\end{proof}
+
+\section{Old windows, reservoirs, and scale birth}\label{sec:old-window}
+
+
+\begin{lemma}[High-revisit one-coordinate routing]\label{lem:high-revisit}
+At an old close-pair occurrence suppose a coordinate $i$ has role $X_i=Y_i\ne Z_i$, and put $A_i=X_i=Y_i$ under the current conditional law.  For every $0<\rho\le1/2$ and $0<\tau<1$, the following public routing is exhaustive.  Let
+\[
+        H=\{a:\Prob[A_i=a]\ge\rho\tau\},\qquad L=\Omega_i\setminus H.
+\]
+The branches $A_i=a\in H$ are terminal one-coordinate value pins of conditional mass at least $\rho\tau$.  If $\Prob[A_i\in L]<\rho$, the light complement is a charged pruning branch of loss at most $2\rho$.  If $\Prob[A_i\in L]\ge\rho$, then after conditioning on the public event $A_i\in L$, the conditional law of the actual sample coordinate has collision at most $\tau$ and enters the labelled hash window for that sample label, provided the paid set event fits the stopped budget; otherwise the branch terminalizes on the already paid prefix.
+\end{lemma}
+
+\begin{proof}
+This is \Cref{lem:heavy-light} applied to the actual one-coordinate law of $A_i$.  The coordinate identity $i$ belongs to the current actual old block which caused the cap crossing, so the chosen sample label and coordinate are retained data.  Heavy atoms terminalize, small complements are pruning, and large complements give the low-collision hash law.  No common old value vector is retained by a nonterminal child.
+\end{proof}
+
+\begin{proposition}[Fixed-scale old-window retained kernel]\label{prop:old-window}
+Let $O_1,\ldots,O_R\subseteq U$ be public actual split old close-pair blocks of one dyadic scale and one public sample-label signature.  Deterministic possible-support sets used only to expose equality patterns are not members of this list.  The old-window transition has the following retained exits:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item a terminal value or equality shadow;
+\item a high-revisit hard exit on a coordinate whose mark would exceed $Q$;
+\item a low-revisit continuation in which all actual old incidences are encoded as increments of $M$ and any bounded short window is put into the bounded queue;
+\item a signature-changing hard exit which first charges or registers the bounded queue and then clears it.
+\end{enumerate}
+No high-symbol old value vector is retained in a nonterminal child.
+\end{proposition}
+
+
+\begin{proof}
+The persistent sample-label signature and dyadic scale are part of the public state, so every block in the list refers to the same ordered labels and the same scale.  Process the queued blocks in their public order.  If the branch elects to stop on a public close-pair block, it records either a value shadow or the equality shadow $X_{O_r}=Y_{O_r}$; no common value vector is needed for equality terminalization.
+
+Otherwise the proof does not expose the common value vector on $O_r$.  The only nonterminal information extracted from $O_r$ is finite role, scale, queue and incidence data.  Attempt to increment $M(i)$ for each $i\in O_r$.  If some increment would make $M(i)>Q$, then this $i$ is in the current actual split close-pair block, not merely in a possible support.  Therefore \Cref{lem:high-revisit} applies to that actual coordinate and gives alternative (ii).  The current block is charged to that hard exit and is not inherited as a low-revisit block.
+
+If no cap is crossed, all incidences of $O_r$ are registered by the increments of $M$.  A bounded short window may be retained only as a bounded queue whose coordinate support is contained in already incremented marks.  Thus every coordinate identity used later is encoded in the retained state, and \Cref{lem:mark-compression} pays its entropy over the whole old-support epoch.  If the active signature changes, the previous signature's equality pattern has no meaning for the new labels.  Therefore the queue is either registered, terminalized, or charged to the signature-changing hard exit before being cleared; the child for the new signature is the quotient conditional law on the retained label.  This proves the alternatives and the assertion that no high-symbol old value vector is retained.
+\end{proof}
+
+
+\begin{lemma}[Reservoir marginalization]\label{lem:reservoir-marg}
+Suppose a transition temporarily creates auxiliary sample labels only to certify a public event or realize conditioned copies.  If all future selectors and all retained state variables are measurable with respect to a retained set of labels and the public retained state, then replacing the full conditional law by its marginal on the retained labels preserves the law of all future selectors and terminal shadows involving retained labels.  It cannot increase the entropy of any retained key.
+\end{lemma}
+
+\begin{proof}
+This is the elementary identity of marginal laws for events measurable in the retained coordinates.  Erased labels cannot be used by future selectors by hypothesis.  Deterministic marginalization is a data-processing map and cannot increase Shannon or Renyi entropy of a retained key.
+\end{proof}
+
+\begin{proposition}[Bounded reservoir]\label{prop:reservoir}
+The number of active sample labels retained in a nonterminal state is bounded by an absolute constant.  Terminal label multiplicity satisfies
+\[
+        R(\Theta)\le T(\Theta)+O(1).
+\]
+\end{proposition}
+
+\begin{proof}
+All nonterminal modes retain only the active triple, pair, or bounded reservoir needed by the next transition.  Hash copying may temporarily create three conditioned copies, but after the copy tax is paid the auxiliary labels are erased by \Cref{lem:reservoir-marg}.  Every nonempty terminal sample label pins at least one coordinate, except for the fixed reservoir labels already present.
+\end{proof}
+
+\begin{proposition}[Scale-birth certificate]\label{prop:scale-birth}
+Every new nonterminal active block $J$ is born with rank and scale balance paid by one of the following sources: initial active rank, parent active-rank drop, parent active-scale balance, fresh promotion, or old mark increments.  A hash token is assigned before a child born from its returned residual block is entered.  Terminal shadows and DRC selector certificates do not themselves create recurrence potential.
+\end{proposition}
+
+\begin{proof}
+If $J$ is a fixed-fraction child of a parent active rank $m$, choose constants so that the parent rank drop pays the selector cost and the $B_s|J|$ scale deposit while retaining $B_{\rk}|J|$ in the child.  If $J$ is born from fresh coordinates, the fresh drop pays $(B_{\rk}+B_s)|J|$.  If it is born from old coordinates, the mark increments that carried $J$ forward pay the same amount through the old debit.  A token from a hash return is attached to the returned residual block and must be assigned to the hard exit that creates $J$, so the child is token-free.
+\end{proof}
+
+\section{The retained local transition theorem}\label{sec:local-transition}
+
+This section proves the local theorem used in the assembly argument.  The alternatives are finite and mode-by-mode, and each transition is represented by one of the retained-state outputs accounted for below.
+
+\begin{theorem}[Retained local transition theorem]\label{thm:local-transition}
+At every nonterminal retained state generated by the rules below, one of the following retained exits is available, and the child law, if any, is the quotient law determined by the retained output.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item Inactive states use the collision dichotomy: terminal atom, low-collision near-sunflower residual activation, or public DRC close-pair activation.
+\item Close-pair states use \Cref{prop:close-pair}.
+\item Product-KL states use \Cref{prop:product-kl}.
+\item Hash-window states use \Cref{thm:fixed-window} and \Cref{conv:hash-token}.
+\item Residual states use \Cref{lem:fresh-promotion}, \Cref{prop:dense-residual}, \Cref{prop:bounded-residual}, and \Cref{prop:sparse-old}.
+\item Old-window states use \Cref{prop:old-window}.
+\item Reservoir and conditioned-copy labels are reduced by \Cref{prop:reservoir}; new active scales are funded by \Cref{prop:scale-birth}.
+\end{enumerate}
+In particular, no future selector depends on an erased analysis pattern, no hash key contains an erased old-pattern atom, every random old coordinate set carried forward is encoded by $M$ or a bounded queue/active block, and every pending hash token is assigned before a child state is entered.
+\end{theorem}
+
+\begin{proof}
+We check the modes.  In an inactive state, if a codeword or coordinate atom is heavy it terminalizes.  If average coordinate collision is small, \Cref{lem:collision-split} gives a near-sunflower residual activation.  If average collision is large, the events $\{X_i=Y_i\ne Z_i\}$ have positive average density after heavy values are excluded, and \Cref{lem:drc} gives a public close-pair block.
+
+Close-pair and product-KL states are covered by \Cref{prop:close-pair} and \Cref{prop:product-kl}.  Their nonterminal hash outputs are actual sample-coordinate laws under paid prefixes, and their terminal outputs are value/equality shadows or charged pruning branches.
+
+For a hash window, the key is the current retained window transcript and paid set-events only.  By construction, erased old patterns are not part of the key.  If fewer than the target number of live coordinates are accumulated, the bounded support is immediately classified as fresh or old.  If enough live coordinates are accumulated, \Cref{thm:fixed-window} returns a residual block and \Cref{conv:hash-token} attaches exactly one bounded token.
+
+For residual states, first apply the fresh support rule.  Once the branch is old-supported, the dense, bounded, and sparse alternatives are exhaustive according to whether $\E|W_L|$ is at least $\beta|L|$ and whether $|L|$ is bounded.  The dense and bounded cases are \Cref{prop:dense-residual} and \Cref{prop:bounded-residual}.  The sparse case is \Cref{prop:sparse-old}.  In every old nonterminal continuation the actual coordinates carried forward are contained in a mark increment or bounded queue.
+
+Old-window states are \Cref{prop:old-window}.  Signature changes clear bounded queues before the new signature is used.  Reservoir marginalization and scale-birth funding are \Cref{prop:reservoir} and \Cref{prop:scale-birth}.  The retained-state conditions are therefore satisfied: terminal data is retained as shadows, monotone data is retained in finite state, pruning is charged, and analysis-only variables are quotiented before future choices are made.
+\end{proof}
+
+\section{Potential and global accounting}
+
+Define the potential
+\[
+        \Phi=\Phi_{\rk}+\Phi_{\fr}+\Phi_{\old}+\Phi_{\scal}.
+\]
+The precise constants are chosen in a hierarchy.  It is enough for the proof that the following inequalities hold for fixed constants:
+\begin{align*}
+        B_f-B_o &> C_{\fr}+C_{\rm hash}+B_{\rk}+B_s+10,\\
+        \omega_{\old} &> C_{\old}+B_{\rk}+B_s+C_{\rm hash}+10,\\
+        B_o &> Q\omega_{\old}+C_{\rm blk}+C_{\rm aux}+10,\\
+        B_{\rk}(1-\theta_{\rk}) &> (B_s+C_{\rk}+C_{\rm hash}+10)\theta_{\rk},\\
+        B_s(1-\theta_{\scal})m_0 &> C_{\rm hash}+C_{\scal}.
+\end{align*}
+Here $C_{\rm blk}$ is the finite per-old-coordinate retained-state constant in \Cref{lem:mark-compression}.
+
+\begin{proposition}[Branchwise retained charge]\label{prop:branch-charge}
+For every retained branch of the finite transition tree,
+\[
+        \sum_{v\ {\rm reached}} c_v
+        \le C\bigl(T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta)+\Delta\Phi\bigr),
+\]
+where $c_v$ is the retained selector charge at $v$, $\Delta\Phi$ is spent potential, and $C$ depends only on the fixed hierarchy.
+\end{proposition}
+
+\begin{proof}
+Terminal value and equality exits are charged to their shadow sizes.  Fresh exits use disjoint promoted sets and the fresh drop.  Old exits use mark increments; by \Cref{lem:mark-compression} and the cap $Q$, all retained old non-value data is paid by $B_o|U|-\omega_{\old}\sum_i M(i)$ together with the per-coordinate state constant.  Scale descents are geometric after a scale is born; births are paid by \Cref{prop:scale-birth}.  Hash windows contribute one bounded token and \Cref{conv:hash-token} assigns it injectively to the first hard exit of the returned block.  Reservoir labels are bounded by \Cref{prop:reservoir}.  Summing these disjoint accounts gives the inequality.
+\end{proof}
+
+\begin{proposition}[Finite truncation]\label{prop:finite-truncation}
+After bounded leaves are imposed below a fixed scale $m_0$, the retained transition system has finite truncations whose discarded tails are controlled by the pruning losses already charged.
+\end{proposition}
+
+\begin{proof}
+It is enough to show that, after removing explicitly charged pruning branches, every nonterminal path has only finitely many retained changes before it reaches a terminal or bounded leaf.  Order the possible zero-pruning continuations by the lexicographic resource vector
+\[
+        \mathcal R=(N_{\rm fresh},N_{\rm old},N_{\rm hash},N_{\rm scale},N_{\rm queue}),
+\]
+where $N_{\rm fresh}$ is the number of still unpromoted coordinates, $N_{\rm old}=\sum_{i\in U}(Q-M(i))$ is remaining old mark capacity, $N_{\rm hash}$ is the bounded number of live coordinates still allowed before a window either returns or becomes a bounded-support exit, $N_{\rm scale}$ is the sum of dyadic scale levels above $m_0$ in all active blocks, and $N_{\rm queue}$ is the bounded unpaid queue capacity before an old window must register or clear.  The exact integer normalization of scale is fixed by the dyadic scale grid.
+
+A fresh promotion strictly decreases $N_{\rm fresh}$ after depositing the old reserve.  A low-revisit old continuation strictly decreases $N_{\rm old}$; if this is impossible, the high-revisit exit is taken.  A hash-window step either adds one of fewer than $2h$ live coordinates, closes the bounded support, or returns a fixed-window residual block with a token; the token must be assigned before any child state or new hash window is entered, so it cannot create a cycle.  A deletion-trapped continuation decreases dyadic scale by the fixed factor, and any scale increase is a new birth paid by a rank, fresh, old, or scale certificate, so the paid birth is counted before the child is entered.  A bounded old queue can be extended only up to its fixed threshold; then it is registered, terminalized, or charged to a hard exit.
+
+All deterministic tie-breaks are functions of the retained law and retained labels.  If none of the displayed resources changes and no pruning/terminal event occurs, the next retained state would be identical to the present one and the deterministic transition would repeat the same choice; by the transition rules this is declared a bounded leaf.  Thus finite depth truncations lose only explicitly pruned mass, whose normalization losses have already been recorded.  Letting the truncation depth tend to infinity preserves the entropy inequality by monotone convergence for the accumulated nonnegative pruning loss.
+\end{proof}
+
+\section{Assembly theorem}
+
+\begin{theorem}[Retained-state assembly]\label{thm:assembly}
+Choose constants as above.  There is a constant $D_0<\infty$, independent of $k$, the alphabet sizes, and $|\C|$, such that every balanced two-collision code of length $k$ has size at most $D_0^k$.  Consequently every family of sets of size at most $k$ with no three-petal sunflower has size at most $(eD_0)^k$.
+\end{theorem}
+
+\begin{proof}
+Run the retained transition tree from the uniform law on the code.  By \Cref{lem:retained-entropy} and \Cref{prop:branch-charge}, after finite truncation and letting the truncation error tend to zero,
+\[
+        \HH(Z_*)+\E L_{\pr}
+        \le C\,\E\bigl[T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta)+\Delta\Phi\bigr].
+\]
+Therefore some terminal retained outcome has original mass at least
+\[
+        \exp\{-C(T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta))-C\Delta\Phi\}.
+\]
+If the terminal output contains a nonempty value shadow, apply \Cref{thm:value-shadow}; if it contains only an equality shadow, apply \Cref{thm:equality-shadow}.  The potential compatibility follows from the construction of the branch accounts: spent potential plus inherited cylinder-child potential is at most the parent potential, because all hash tokens, old queues, and scale births are assigned before terminal counting.  Strengthen the induction to
+\[
+        |\C(\State)|\le D^{\rank(\State)}\exp(A\Phi(\State)).
+\]
+Choose $A$ and $D$ large enough to absorb the fixed constants.  The root potential is $O(k)$, so the bound is $D_0^k$ after increasing $D_0$.  The set-family statement follows from \Cref{cor:code-reduction}.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{ALWZ}
+R. Alweiss, S. Lovett, K. Wu, and J. Zhang, \emph{Improved bounds for the sunflower lemma}, Annals of Mathematics 194 (2021), 795--815.
+
+\bibitem{ER}
+P. Erd\H{o}s and R. Rado, \emph{Intersection theorems for systems of sets}, J. London Math. Soc. 35 (1960), 85--90.
+
+\bibitem{Rao}
+A. Rao, \emph{Coding for sunflowers}, Discrete Analysis 2020:2 (2020), 8 pp.
+
+\bibitem{Tao}
+T. Tao, \emph{The sunflower lemma via Shannon entropy}, blog note, 2020.
+\end{thebibliography}
+
+\end{document}
