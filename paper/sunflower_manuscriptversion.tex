@@ -55,7 +55,7 @@ We develop a retained-state coordinate-collision entropy method for three-petal-
 
 The retained-state ledger is the bookkeeping mechanism.  Internal equality patterns used to analyse old-supported sparse residual witnesses are not permanent transcript variables.  Before any nonterminal child is entered, every random old coordinate block that will be used later is either terminalized or encoded as an increment of capped old-coordinate marks.  Future choices are recomputed from the conditional law on the quotient event determined by the retained state.  Thus repeated renewal of sample signatures is charged through a final finite state of entropy $O(|U|)$, rather than through the sum of all internal possible-support pattern exposures.
 
-The proof proceeds through a retained-state assembly theorem.  The local transition theorem in \Cref{sec:local-transition} is organized as a finite list of mode-by-mode alternatives: every close-pair, product-KL, hash, residual, old-window, reservoir, and scale-birth transition is represented as terminal data, monotone retained data, charged pruning, or analysis data erased before continuation.  Combining these local kernels with the retained entropy ledger gives a constant-base recurrence for balanced two-collision codes, and hence for three-petal-sunflower-free set families.
+The argument proceeds through a retained-state assembly theorem.  The local transition theorem in \Cref{sec:local-transition} is organized as a finite list of mode-by-mode alternatives: every close-pair, product-KL, hash, residual, old-window, reservoir, and scale-birth transition is represented as terminal data, monotone retained data, charged pruning, or analysis data erased before continuation.  Combining these local kernels with the retained entropy ledger gives a constant-base recurrence for balanced two-collision codes, and hence for three-petal-sunflower-free set families.
 \end{abstract}
 
 \section{Statement of the reduction}
@@ -219,6 +219,29 @@ Analysis-only variables which are quotiented before the next state do not appear
 
 \begin{proof}
 The terminal shadows are deterministic functions of $Z_*$.  For the second assertion, reveal only the retained labels along the reached path, not the full analysis atoms.  The chain rule gives the sum of the conditional entropies of the retained labels.  The quotient measurability condition ensures that later transition kernels are functions of the already revealed retained labels and their quotient laws; hence discarded atoms are not needed to reconstruct the distribution of future retained labels.  Adding pruning losses is an ordinary normalization account and does not require retaining the discarded branch.
+
+\end{proof}
+
+\begin{lemma}[Cylinder heredity and active-block admissibility]\label{lem:cylinder-active-admissibility}
+Let $\C\subseteq\prod_{i\in I}\Omega_i$ be a balanced two-collision code.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item If $J\subseteq I$ and $a\in\prod_{j\in J}\Omega_j$, then the value cylinder
+\[
+        \C(J=a)=\{x\in\C:x_J=a\},
+\]
+after deleting $J$, is again a balanced two-collision code on $I\setminus J$.
+\item A public active block $L\subseteq I$ which is produced by a close-pair, residual, old-window, DRC, or hash transition is only a retained analysis label inside the same ambient cylinder code.  It is not treated as an independent projected code for induction.
+\item A bounded recursive leaf is allowed only when the current ambient cylinder rank is below the fixed threshold $m_0$.  A small active block inside a large ambient cylinder is a local bounded output, not a recurrence leaf, unless it terminalizes as a value or equality shadow or is absorbed by a paid retained-state account.
+\end{enumerate}
+Consequently every nonterminal child produced by the retained transition system remains an admissible state over a balanced two-collision ambient cylinder code.
+\end{lemma}
+
+\begin{proof}
+For (i), take three distinct words in the cylinder after deleting $J$ and lift them to their original words in $\C$.  The balanced two-collision coordinate for the three original words cannot lie in $J$, because all three words have the same pinned value on every coordinate of $J$.  Hence the witnessing coordinate remains in $I\setminus J$.
+
+For (ii), the retained transition rules never replace the ambient code by the projection of $\C$ to $L$.  The block $L$ may determine which local lemma is applied next, and its coordinate identity may be paid by rank, fresh, old, scale, or hash accounts, but the current law is always the conditional law of samples from the same ambient cylinder code, quotiented by the retained label.  Thus no step uses the false implication that arbitrary coordinate projections of balanced two-collision codes remain balanced.
+
+For (iii), the induction is invoked only on genuine value cylinders, covered by (i), or on terminal equality/value shadows via the descent theorems.  Finite bounded leaves are therefore finite-rank ambient cylinder leaves.  If the ambient rank is still at least $m_0$, a small active block must be processed as local retained data and charged to one of the transition accounts.  Induction on depth now gives admissibility for every nonterminal child: terminal branches stop, value-cylinder branches preserve balancedness by (i), and all other branches keep the same balanced ambient cylinder and change only the retained state.
 \end{proof}
 
 \section{Elementary local tools}
@@ -512,7 +535,7 @@ Apply \Cref{lem:drc} to the events $\{t\in W_L\}$.  On the event that all coordi
 \end{proof}
 
 \begin{proposition}[Bounded residual kernel]\label{prop:bounded-residual}
-If $\E|W_L|\ge \beta |L|$ but $|L|<4/\beta$, the exact subset $W_L\subseteq L$ and its role pattern have bounded entropy depending only on $\beta$.  The branch is terminal, bounded-leaf, fresh, or old; in the old nonterminal case the actual used coordinates are recorded as old mark increments before any child is entered.
+If $\E|W_L|\ge \beta |L|$ but $|L|<4/\beta$, the exact subset $W_L\subseteq L$ and its role pattern have bounded entropy depending only on $\beta$.  The branch is terminal, bounded-ambient-leaf, fresh, or old; in the old nonterminal case the actual used coordinates are recorded as old mark increments before any child is entered.
 \end{proposition}
 
 \begin{proof}
@@ -687,11 +710,11 @@ Terminal value and equality exits are charged to their shadow sizes.  Fresh exit
 \end{proof}
 
 \begin{proposition}[Finite truncation]\label{prop:finite-truncation}
-After bounded leaves are imposed below a fixed scale $m_0$, the retained transition system has finite truncations whose discarded tails are controlled by the pruning losses already charged.
+After bounded ambient cylinder leaves are imposed below a fixed rank $m_0$, the retained transition system has finite truncations whose discarded tails are controlled by the pruning losses already charged.
 \end{proposition}
 
 \begin{proof}
-It is enough to show that, after removing explicitly charged pruning branches, every nonterminal path has only finitely many retained changes before it reaches a terminal or bounded leaf.  Order the possible zero-pruning continuations by the lexicographic resource vector
+It is enough to show that, after removing explicitly charged pruning branches, every nonterminal path has only finitely many retained changes before it reaches a terminal or bounded ambient leaf.  Order the possible zero-pruning continuations by the lexicographic resource vector
 \[
         \mathcal R=(N_{\rm fresh},N_{\rm old},N_{\rm hash},N_{\rm scale},N_{\rm queue}),
 \]
@@ -699,7 +722,7 @@ where $N_{\rm fresh}$ is the number of still unpromoted coordinates, $N_{\rm old
 
 A fresh promotion strictly decreases $N_{\rm fresh}$ after depositing the old reserve.  A low-revisit old continuation strictly decreases $N_{\rm old}$; if this is impossible, the high-revisit exit is taken.  A hash-window step either adds one of fewer than $2h$ live coordinates, closes the bounded support, or returns a fixed-window residual block with a token; the token must be assigned before any child state or new hash window is entered, so it cannot create a cycle.  A deletion-trapped continuation decreases dyadic scale by the fixed factor, and any scale increase is a new birth paid by a rank, fresh, old, or scale certificate, so the paid birth is counted before the child is entered.  A bounded old queue can be extended only up to its fixed threshold; then it is registered, terminalized, or charged to a hard exit.
 
-All deterministic tie-breaks are functions of the retained law and retained labels.  If none of the displayed resources changes and no pruning/terminal event occurs, the next retained state would be identical to the present one and the deterministic transition would repeat the same choice; by the transition rules this is declared a bounded leaf.  Thus finite depth truncations lose only explicitly pruned mass, whose normalization losses have already been recorded.  Letting the truncation depth tend to infinity preserves the entropy inequality by monotone convergence for the accumulated nonnegative pruning loss.
+All deterministic tie-breaks are functions of the retained law and retained labels.  If none of the displayed resources changes and no pruning/terminal event occurs, the next retained state would be identical to the present one and the deterministic transition would repeat the same choice; by the transition rules this is declared a bounded ambient leaf.  Thus finite depth truncations lose only explicitly pruned mass, whose normalization losses have already been recorded.  Letting the truncation depth tend to infinity preserves the entropy inequality by monotone convergence for the accumulated nonnegative pruning loss.
 \end{proof}
 
 \section{Assembly theorem}
@@ -724,7 +747,6 @@ If the terminal output contains a nonempty value shadow, apply \Cref{thm:value-s
 \]
 Choose $A$ and $D$ large enough to absorb the fixed constants.  The root potential is $O(k)$, so the bound is $D_0^k$ after increasing $D_0$.  The set-family statement follows from \Cref{cor:code-reduction}.
 \end{proof}
-
 \begin{thebibliography}{9}
 \bibitem{ALWZ}
 R. Alweiss, S. Lovett, K. Wu, and J. Zhang, \emph{Improved bounds for the sunflower lemma}, Annals of Mathematics 194 (2021), 795--815.
@@ -738,5 +760,6 @@ A. Rao, \emph{Coding for sunflowers}, Discrete Analysis 2020:2 (2020), 8 pp.
 \bibitem{Tao}
 T. Tao, \emph{The sunflower lemma via Shannon entropy}, blog note, 2020.
 \end{thebibliography}
+
 
 \end{document}

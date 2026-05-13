@@ -50,12 +50,50 @@
 \begin{document}
 \maketitle
 
-This standalone appendix accompanies \texttt{sunflower\_manuscriptversion.pdf}.
-It contains the retained transition certificates, branchwise charge checks,
-numerical transfer estimates, and activation checks used by the readable
-manuscript.
+This appendix contains the retained transition certificates, branchwise charge checks, numerical transfer estimates, activation checks, and active-block admissibility certificates used in the proof.
 
 \appendix
+
+
+\section{Active-block admissibility and cylinder heredity}\label{app:active-admissibility}
+
+The retained proof uses many public coordinate blocks: close-pair blocks, residual split blocks, old-window blocks, DRC blocks, and hash-return blocks.  This section records the rule which prevents these blocks from being misused as recursive projected codes.
+
+\begin{lemma}[Value cylinders preserve balanced two-collision]\label{lem:app-cylinder-heredity}
+Let $\C\subseteq\prod_{i\in I}\Omega_i$ be a balanced two-collision code.  Let $J\subseteq I$ and $a\in\prod_{j\in J}\Omega_j$.  If
+\[
+        \C_a=\{x\in\C:x_J=a\}
+\]
+is nonempty, then its deletion projection to $I\setminus J$ is a balanced two-collision code.
+\end{lemma}
+
+\begin{proof}
+Take three distinct projected words in the deletion projection and lift them to three distinct words of $\C_a$.  Since $\C$ is balanced two-collision, the lifted triple has a coordinate $i\in I$ at which exactly two values are equal.  This coordinate cannot lie in $J$, because all three lifted words have value $a$ on $J$.  Hence $i\in I\setminus J$, and it witnesses the balanced two-collision property after deletion.
+\end{proof}
+
+\begin{lemma}[Arbitrary projections are not used for induction]\label{lem:app-no-projection-induction}
+A nonterminal active block $L\subseteq I$ created by a close-pair, residual, old-window, DRC, or hash transition is not regarded as a new balanced two-collision code on $L$.  It is only a retained analysis label inside the current ambient cylinder code.  The only recursive children are value-cylinder children covered by Lemma~\ref{lem:app-cylinder-heredity}; equality shadows are terminal objects and do not create projected recursive children.
+\end{lemma}
+
+\begin{proof}
+The retained state contains the ambient cylinder code and its conditional law.  A local block $L$ is used to choose the next local mode, to define a terminal shadow, or to record paid retained coordinate information.  The child conditional law after a nonterminal transition is the quotient law on the same ambient cylinder event, not the uniform law on the coordinate projection to $L$.  Thus all later applications of the balanced two-collision axiom are made in the ambient cylinder code.  If a branch terminalizes on $X_L=Y_L$, the equality-shadow descent is applied directly and no projected code on $L$ is formed.  If a branch terminalizes on $X_L=a$, the recursive child is the value cylinder and is covered by Lemma~\ref{lem:app-cylinder-heredity}.
+\end{proof}
+
+\begin{proposition}[Active-block admissibility certificate]\label{prop:app-active-admissibility}
+Assume that the root state is a balanced two-collision ambient code and that every retained transition satisfies the following rules:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item value pins terminalize or create value-cylinder children;
+\item equality blocks terminalize as equality shadows;
+\item every nonterminal active block is encoded in the retained state and is paid by rank, fresh, old, scale, hash, or reservoir accounts;
+\item future selectors are functions only of the retained label and quotient ambient law;
+\item bounded recurrence leaves are declared only when the ambient cylinder rank is below the fixed threshold $m_0$.
+\end{enumerate}
+Then every nonterminal child is an admissible retained state over a balanced two-collision ambient cylinder code.  In particular, no step of the proof requires the assertion that an arbitrary coordinate projection of a balanced two-collision code is again balanced.
+\end{proposition}
+
+\begin{proof}
+Induct on the tree depth.  The root is admissible by assumption.  A terminal branch has no child.  A value-cylinder child is admissible by Lemma~\ref{lem:app-cylinder-heredity}.  In every other nonterminal branch the ambient code is not changed to a coordinate projection; only the retained state, active labels, counters, queues, scale labels, and tokens are changed.  By the quotient rule the next law is the conditional law on the union of all analysis atoms with the same retained label, so it is still a law on the same balanced ambient cylinder code.  The coordinate identities of local active blocks are part of the retained finite state and have been paid by one of the listed accounts.  Finally, if the process stops by a bounded leaf, rule (v) says that the boundedness is a statement about the ambient cylinder rank, so the finite base case applies to a genuine balanced two-collision code.  This proves the induction step.
+\end{proof}
 
 \section{Verification format for retained local transitions}\label{app:verification-format}
 
@@ -631,7 +669,7 @@ The retained local transition theorem used in the main text follows from the tra
 \end{theorem}
 
 \begin{proof}
-Inactive states are routed by the activation certificate \Cref{lem:appendix-inactive-activation}.  Close-pair and product-KL states are handled by \Cref{prop:app-close-pair-certificate}, with the complement transfer made numerical in \Cref{lem:appendix-complement-transfer}.  Hash-window states are handled by \Cref{prop:app-hash-certificate}.  Residual states are handled by \Cref{prop:app-residual-certificate}.  Old-window states are handled by \Cref{prop:app-old-window-certificate}.  Reservoir, scale-birth, and token rules are handled by Appendices \ref{app:reservoir-scale} and \ref{app:charges}.  Finite truncation is \Cref{prop:app-no-loop} and the strengthened no-loop statement is Proposition~\ref{prop:crit-no-loop}.  Quotient measurability is supplied by \Cref{lem:quotient-meas-app}, the sparse selector condition by Lemma~\ref{lem:crit-sparse-no-selector}, the actual-coordinate KL condition by Lemma~\ref{lem:crit-kl-actual}, and hash-key cleanliness by Lemma~\ref{lem:crit-no-erased-key}.  The numerical row charges are recorded in \Cref{prop:appendix-row-telescope}.  Therefore every child state retains only terminal data, monotone finite-state data, charged pruning, or a quotient law from which all future selectors are recomputed.
+Active-block admissibility is supplied by Proposition~\ref{prop:app-active-admissibility}. Inactive states are routed by the activation certificate \Cref{lem:appendix-inactive-activation}.  Close-pair and product-KL states are handled by \Cref{prop:app-close-pair-certificate}, with the complement transfer made numerical in \Cref{lem:appendix-complement-transfer}.  Hash-window states are handled by \Cref{prop:app-hash-certificate}.  Residual states are handled by \Cref{prop:app-residual-certificate}.  Old-window states are handled by \Cref{prop:app-old-window-certificate}.  Reservoir, scale-birth, and token rules are handled by Appendices \ref{app:reservoir-scale} and \ref{app:charges}.  Finite truncation is \Cref{prop:app-no-loop} and the strengthened no-loop statement is Proposition~\ref{prop:crit-no-loop}.  Quotient measurability is supplied by \Cref{lem:quotient-meas-app}, the sparse selector condition by Lemma~\ref{lem:crit-sparse-no-selector}, the actual-coordinate KL condition by Lemma~\ref{lem:crit-kl-actual}, and hash-key cleanliness by Lemma~\ref{lem:crit-no-erased-key}.  The numerical row charges are recorded in \Cref{prop:appendix-row-telescope}.  Therefore every child state retains only terminal data, monotone finite-state data, charged pruning, or a quotient law from which all future selectors are recomputed.
 \end{proof}
 
 \begin{thebibliography}{9}
