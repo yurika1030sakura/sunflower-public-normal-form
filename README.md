@@ -36,12 +36,21 @@ branchwise charge, close-pair/product-KL, hash-window, residual, old-window, and
 termination appendices. It is the better single file for a reader who wants more
 detail without opening the full audit draft.
 
+For the most concentrated check of the compressed local-transition theorem, see
+[`paper/retained_local_transition_critical_appendix.pdf`](paper/retained_local_transition_critical_appendix.pdf).
+This standalone appendix expands the retained local transitions into certificate
+format and isolates the correctness-critical points: quotient measurability,
+sparse old witnesses, high-revisit actual-coordinate routing, actual-coordinate
+product-KL first crossing, clean hash keys, token matching, and no zero-cost
+retained loops.
+
 The longer file
 [`paper/sunflower_public_normal_form_v1.pdf`](paper/sunflower_public_normal_form_v1.pdf)
 is the detailed audit version. It contains more of the interface bookkeeping,
 quotient-erasure clauses, and local ledger refinements. Readers who want to
 check the compressed local-transition statements in the readable manuscripts
-should use the longer version and the audit scripts as supporting material.
+should use the critical appendix, the longer version, and the audit scripts as
+supporting material.
 
 ## What Is Novel
 
@@ -96,6 +105,8 @@ sunflower-public-normal-form/
 │   ├── sunflower_manuscriptversion.tex
 │   ├── sunflower_retained_state_annals_style_with_appendix.pdf
 │   ├── sunflower_retained_state_annals_style_with_appendix.tex
+│   ├── retained_local_transition_critical_appendix.pdf
+│   ├── retained_local_transition_critical_appendix.tex
 │   ├── sunflower_public_normal_form_v1.pdf
 │   └── sunflower_public_normal_form_v1.tex  ← longer audit version
 ├── code/
