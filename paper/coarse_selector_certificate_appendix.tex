@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\cref}[1]{\ref{#1}}
+\newcommand{\Cref}[1]{\ref{#1}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\G}{\mathcal G}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\HH}{\mathrm H}
+\newcommand{\KL}{\mathrm D}
+\newcommand{\Coll}{\operatorname{Coll}}
+\newcommand{\Split}{\operatorname{Split}}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\old}{\mathrm{old}}
+\newcommand{\fr}{\mathrm{fr}}
+\newcommand{\pr}{\mathrm{pr}}
+\newcommand{\win}{\mathrm{win}}
+\newcommand{\State}{\mathsf S}
+\title{Coarse Local Selector Certificates for Retained-State Sunflower Accounting}
+\author{Yuli Li \and Jingping Yang \and Renhao Zhang}
+\date{May 2026}
+\begin{document}
+\maketitle
+
+\section{Coarse local selector certificates}
+
+The purpose of this appendix is to separate two notions which are easy to confuse.  A local proof step may temporarily refine the current event by an analysis atom.  The entropy ledger, however, is allowed to charge only information which survives to the terminal retained object, to a terminal shadow, or to a charged pruning event.  In particular, the entropy of a chronological analysis path is not charged unless the path itself is retained.
+
+\begin{definition}[Contracted retained sigma-algebra]\label{def:coarse-filtration}
+At a nonterminal retained state $v$, let $S_v$ be the retained label, and let $\bar\mu_v$ be the canonical quotient law obtained by conditioning on the union of all analysis atoms with label $S_v$.  Let
+\[
+        \G_v=\sigma\bigl(\Theta_{<v},S_v,\bar\mu_v,\hbox{fixed thresholds and tie-breaks}\bigr),
+\]
+where $\Theta_{<v}$ denotes the terminal value and equality data already recorded.  The sigma-algebra $\G_v$ does not contain erased old patterns, fresh witness labels, the chronological order in which old blocks were inspected, or overwritten intermediate mark vectors.
+\end{definition}
+
+\begin{definition}[Coarse selector certificate]\label{def:coarse-certificate}
+A transition at $v$ has a coarse selector certificate if its nonterminal retained output $Y_v$ is $\G_v$-measurable after adding only the displayed retained label, and
+\[
+        \HH(Y_v\mid \G_v) + \E(\ell_v^{\pr}\mid \G_v)
+        \le C_v,
+\]
+where $C_v$ is one of the terminal, pruning, fresh, old, hash, scale, or rank charges in the potential table.  Analysis variables which are quotiented before the child state are not included in $Y_v$ and are not charged by this inequality.  If an analysis variable later influences a selector, then it was not actually erased and must be part of $Y_v$.
+\end{definition}
+
+\begin{center}\small
+\begin{tabular}{p{0.17\textwidth}p{0.25\textwidth}p{0.24\textwidth}p{0.23\textwidth}}
+\toprule
+Transition & Coarse data used & Retained output charged & Forbidden erased data \\
+\midrule
+Value/equality shadow & $\G_v$, a public block $J$ retained in $S_v$ or selected deterministically from $\bar\mu_v$ & terminal $(J,a,s)$ or $(J,s,t)$; mass bound measured under $\bar\mu_v$ & path-specific heavy atoms not heavy under $\bar\mu_v$ \\
+Fresh promotion & positive fresh support computed from $\bar\mu_v$ & promoted set $F$ or bounded fresh pattern; paid by fresh reserve & witness labels used only inside analysis atom \\
+Sparse old & old support $U$, marks $M$, quotient law $\bar\mu_v$, and the paid old-pattern atom for the active retained signature & nested extension of the paid pattern atom, then terminal data, mark increments, bounded queues, or active old blocks & un-paid $O$-patterns, un-paid $K_0$ selection, signature renewal order \\
+High revisit & a candidate mark increment or cap-crossing coordinate represented by the paid old-pattern/mark output & crossing coordinate and hard exit; terminal/pruning/hash branch & current actual block unless encoded by paid pattern data or attempted mark increment \\
+Hash window & parent retained state, paid stopped key, and survival scan on the actual one-coordinate law & labelled window key, live coordinate list with no coordinate atom $\ge\beta$, return token; cost $O(B_{\win}+h)$ & erased old patterns, erased witness labels, chronological reset order, large atoms not terminalized before copying \\
+Scale/DRC birth & event densities and block choices computed from $\bar\mu_v$ & deterministic block $J$ plus scale/rank certificate & path-specific law before quotienting \\
+Old queue clear & bounded queue state as an unordered finite retained object & batch clear, terminal/hard exit, or quotient output & chronological order of old blocks inside the queue \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{proposition}[Coarse row 1: value and equality shadows]\label{prop:coarse-row-value}
+The value/equality shadow row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+The coordinate block $J$ is either already part of the retained state $S_v$ or is chosen by a deterministic tie-break from the quotient law $\bar\mu_v$.  Therefore $J$ is $\G_v$-measurable.  A value atom $a$ is selected only if the required mass lower bound holds under $\bar\mu_v$; otherwise this row is not available and the priority order moves to the next row.  On the selected branch the output is terminal data, namely $(J,a,s)$ for a value shadow or $(J,s,t)$ for an equality shadow.  Since the branch stops, no child inherits a path-specific heavy atom which was not heavy under $\bar\mu_v$.  The entropy of the terminal datum is exactly the terminal value/equality shadow charge.
+\end{proof}
+
+\begin{proposition}[Coarse row 2: fresh promotion]\label{prop:coarse-row-fresh}
+The fresh-promotion row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+The promoted set is the positive fresh support computed from $\bar\mu_v$:
+\[
+        F=\{i\notin U:\bar\mu_v(i\hbox{ can appear in the residual witness})>0\}.
+\]
+Thus $F$ is $\G_v$-measurable.  If $F$ is large, the retained output is the promoted set itself and the fresh reserve pays the coordinate identity.  If $F$ is bounded, the finite five-state pattern on $F$ is either terminalized or promoted before any child is entered.  Fresh witness labels used only inside the analysis atom are not retained; if one is needed later, it is included in the promoted or terminal output and paid there.
+\end{proof}
+
+\begin{proposition}[Coarse row 3: sparse old]\label{prop:coarse-row-sparse-old}
+The sparse-old row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+The possible support $O$ is computed from $\bar\mu_v$, so it is $\G_v$-measurable.  Before the actual split set $K_0$ can affect a child state or a high-revisit hard exit, the five-state pattern on $O$ is either paid as a nested extension of the old-pattern atom for the active retained signature, or the branch terminalizes before any child is entered.  After that paid extension, $K_0$ and the first cap-crossing coordinate are functions of retained data.  If a coordinate set extracted from $K_0$ is carried forward, the retained label records it as a mark increment, a bounded queue element, an active old block, or terminal data.  Otherwise all atoms giving the same retained label are merged and the child law is the conditional law on their union.  Hence the subset $K_0\subseteq O$ is never an unpaid child selector, and the internal sparse path entropy is not part of the retained transcript.
+\end{proof}
+
+\begin{proposition}[Coarse row 4: high revisit]\label{prop:coarse-row-high-revisit}
+The high-revisit row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+The row is legal only when the coordinate that would cross the cap is already determined by the paid old-pattern atom and the mark vector, or belongs to an attempted mark increment already represented in the retained output.  If there is no such paid retained description of the crossing coordinate, high revisit is not a legal coarse transition.  Once the coordinate is part of retained hard-exit data, the one-coordinate heavy/light routing uses the actual one-coordinate law under $\bar\mu_v$ and produces only terminal value data, charged pruning, or a labelled low-collision hash coordinate.  Thus the current actual block is never used unless it has first been encoded by paid pattern data or by the attempted mark increment.
+\end{proof}
+
+\begin{proposition}[Coarse row 5: hash window]\label{prop:coarse-row-hash}
+The hash-window row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+The key is the parent retained state together with the paid stopped transcript of one labelled window.  Erased old patterns, erased witness labels, and chronological reset order are not functions of this key and cannot be matched across conditioned copies.  Before a coordinate is live, the survival scan tests its actual one-coordinate law; a coordinate atom of mass at least $\beta$ terminalizes as a one-coordinate value pin.  Therefore every nonterminal live block has all coordinate atoms below $\beta$, and the fixed-window copying lemma applies only to such live coordinates.  The key entropy is bounded by $B_{\win}$, the copy tax is bounded by the Renyi key entropy, and the exact split exposure on the returned block is $O(h)$.  The retained output is one labelled window return and one token of cost $O(B_{\win}+h)$.
+\end{proof}
+
+\begin{proposition}[Coarse row 6: scale and DRC birth]\label{prop:coarse-row-scale-drc}
+The scale/DRC birth row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+All event densities used for DRC or scale birth are evaluated under $\bar\mu_v$.  The selected block is the first block, in the fixed deterministic order, satisfying the displayed density and size conditions.  Hence the block identity is $\G_v$-measurable.  The retained output is the active child block together with its rank/scale certificate; the rank drop, fresh drop, old debit, scale descent, or hash-token assignment deposits the child potential before the child is entered.  A path-specific pre-quotient law is not retained and cannot be used to choose a different child after quotienting.
+\end{proof}
+
+\begin{proposition}[Coarse row 7: old queue clearing]\label{prop:coarse-row-old-queue}
+The old-queue-clearing row has a coarse selector certificate.
+\end{proposition}
+
+\begin{proof}
+The queue is a bounded retained object, treated as an unordered finite batch with a canonical tie-break determined by $S_v$ and $\bar\mu_v$.  Clearing the queue therefore depends only on $\G_v$.  The retained output is either terminal data, a hard-exit label, registered mark increments, or a quotient output which forgets the internal queue order.  If the chronological order of arrival is needed to select a future block, then that order has not been erased and must be retained and paid; otherwise it is not a terminal transcript variable and cannot affect the clear operation.
+\end{proof}
+
+\begin{proposition}[Coarse local selector table]\label{prop:coarse-table}
+Assume the retained algorithm uses only the coarse data listed in the second column of the table above and enforces the forbidden-data restrictions in the last column.  Then each row has a valid coarse selector certificate.  Consequently sparse old analysis is charged through the final retained old state, not through the path entropy of the internal sparse selectors.
+\end{proposition}
+
+\begin{proof}
+The seven rows are proved separately in Propositions~\ref{prop:coarse-row-value}--\ref{prop:coarse-row-old-queue}.  These propositions verify, row by row, that the retained output is $\G_v$-measurable after adding only paid retained data, that the entropy is paid by the corresponding terminal/pruning/fresh/old/hash/scale/rank charge, and that every listed forbidden datum is either terminalized, paid, retained explicitly, or unavailable to future selectors.  Thus the table is a summary of proved row certificates, not an additional assumption.
+\end{proof}
+
+\section{Old-epoch quotient compression}
+
+\begin{theorem}[Old-epoch quotient compression]\label{thm:old-epoch-quotient-compression}
+Fix an old-support epoch with old support $U$.  During the epoch the algorithm may refine the current event by possible supports, five-state equality patterns, actual sparse split sets, fresh witness labels, old-block roles, and the chronological order in which blocks are inspected.  The five-state pattern is paid and retained exactly on the nested old-pattern domain needed for future old selectors; all remaining analysis data is mapped to a retained old output
+\[
+        S_{\old}^{\rm out}=(U,\hbox{scale},M,\hbox{paid old-pattern atom},\mathcal Q,\mathcal B,\hbox{finite role labels},\hbox{paid hard-exit data}),
+\]
+where $M:U\to\{0,\ldots,Q\}$, $\mathcal Q$ is a bounded queue state, and $\mathcal B$ is a bounded active old-block state.  The child law is the conditional law on the union of all analysis atoms with the same retained output.  All later selectors are deterministic functions of that child law and the retained output.
+
+Then
+\[
+        \HH(S_{\old}^{\rm out}\mid U)\le (C_{\rm pat}+C_{\old})|U|+O(1),
+\]
+where $C_{\rm pat}$ is the fixed old-pattern support cost and $C_{\old}$ depends only on the fixed caps.  No term of the form
+\[
+        \sum_t \log { |O_t|\choose |K_t| }
+\]
+is charged in this old epoch unless the selected $K_t$ is explicitly retained as terminal data, as a mark increment, as a bounded retained block, or through the paid old-pattern atom which made it selectable.
+\end{theorem}
+
+\begin{proof}
+Let $\mathcal A$ be the chronological analysis transcript of the epoch.  The quotient map sends each $a\in\mathcal A$ to the retained object $S_{\old}^{\rm out}(a)$ displayed above.  By construction, all atoms with the same retained output are merged, and the child law is the conditional law on their union.  Thus the future process does not know $a$ except through $S_{\old}^{\rm out}(a)$.
+
+The number of possible capped vectors $M$ is at most $(Q+1)^{|U|}$.  The paid old-pattern atom has only five states per coordinate on a nested domain and only boundedly many retained signatures, contributing $\exp(C_{\rm pat}|U|+O(1))$.  Bounded queue positions, active old blocks, scale labels, role labels, reservoir labels, and pending-token status assign only finitely many states per coordinate of $U$ and a bounded number of global labels.  Therefore the number of possible old outputs is at most $\exp((C_{\rm pat}+C_{\old})|U|+O(1))$, and the displayed entropy bound follows.
+
+The chronological choices of $O_t$ and $K_t$ are not coordinates of the retained output.  Hence their path entropy is not part of the terminal retained transcript.  If a future selector depends on some $K_t$, then the pattern information which determines $K_t$ must be present in the paid old-pattern atom, or $K_t$ itself must be encoded in $S_{\old}^{\rm out}$ or terminalized before continuation; in that case it is counted by the state-space bound or by terminal shadow entropy.  Otherwise it is erased and contributes no selector entropy.
+\end{proof}
+
+\section{Terminal retained object and pointwise outcome}
+
+\begin{lemma}[Terminal retained entropy, not path entropy]\label{lem:terminal-retained-not-path}
+Let $Z_*=(\Theta_{\rm val},\Theta_{\rm eq},S_*)$ be the terminal retained object of a finite retained tree.  Suppose every local row has a coarse selector certificate and every overwritten finite-state component is charged only when it leaves scope or at the terminal leaf.  Then
+\[
+        \HH(Z_*)+\E L_{\pr}
+        \le C\,\E\bigl[T(\Theta_{\rm val})+T(\Theta_{\rm eq})+R(\Theta)+\Delta\Phi\bigr].
+\]
+This is an entropy bound for the final retained object.  It is not obtained by summing the conditional entropy of all erased analysis selectors.
+\end{lemma}
+
+\begin{proof}
+Contract the proof tree by replacing every maximal quotient/overwrite interval by the single retained output which survives that interval.  Because future selectors are measurable with respect to the quotient law and the retained output, the contracted tree has the same distribution of $Z_*$ as the original tree.  Apply the chain rule only to the contracted tree.  Terminal value and equality rows contribute the $T$ and $R$ terms.  Pruning contributes $L_{\pr}$.  Fresh, old, hash, scale, rank, and reservoir rows are bounded by the corresponding potential decreases and by the final retained state entropy.  The old contribution is bounded by Theorem~\ref{thm:old-epoch-quotient-compression}; internal old patterns and sparse sets erased before continuation do not occur in the contracted transcript.  Summing the row inequalities gives the bound.
+\end{proof}
+
+\begin{lemma}[Pointwise retained outcome]\label{lem:pointwise-retained-outcome}
+Let $Z_*$ be a terminal retained object and let $F(Z_*)\ge 0$ be a measurable charge.  If
+\[
+        \E[-\log \Prob(Z_*)-F(Z_*)]\le 0,
+\]
+then there exists a terminal value $z$ with
+\[
+        \Prob(Z_*=z)\ge e^{-F(z)}.
+\]
+More generally, if the expectation is at most $\eta$, then there exists $z$ with $\Prob(Z_*=z)\ge e^{-F(z)-\eta}$.
+\end{lemma}
+
+\begin{proof}
+If $-\log\Prob(Z_*)-F(Z_*)>\eta$ for every possible value, then its expectation would exceed $\eta$.  Hence some value has $-\log\Prob(Z_*=z)-F(z)\le\eta$, which is the displayed inequality.
+\end{proof}
+
+\end{document}

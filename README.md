@@ -23,20 +23,28 @@ to ask the reader to accept an informal claim of a solved conjecture.
 
 ## Which PDF to Read First
 
-Start with
+For a first pass, start with the older shorter draft:
 [`paper/sunflower_manuscriptversion.pdf`](paper/sunflower_manuscriptversion.pdf).
-This is the shorter, more readable manuscript-style version. It is meant to
-explain the retained-state mechanism, the fixed labelled hash window, and the
-global assembly in a linear form suitable for a first expert reading.
+It is the more introductory manuscript-style version.  It explains the retained
+state mechanism, the fixed labelled hash window, and the global assembly without
+including the full coarse-selector and retained-state expansion.
 
-For the main technical check, use
+For the most complete current version, use
+[`paper/sunflower_retained_state_coarse_certified_complete.pdf`](paper/sunflower_retained_state_coarse_certified_complete.pdf).
+This is the expanded retained-state/coarse-certified manuscript.  It has a
+more conventional introduction and proof guide, states the main code theorem
+near the front, and then gives the local transition, coarse selector, old-epoch,
+hash-window, token-matching, and global ledger checks in one file.
+
+The previous standalone technical appendix is also retained at
 [`paper/sunflow_appendix.pdf`](paper/sunflow_appendix.pdf).
-This is the standalone technical appendix. It is meant to be read alongside the
-short manuscript and contains the retained local-transition certificates,
-close-pair/product-KL routing, fixed labelled hash windows, residual and
-old-window transitions, token matching, branchwise charges,
-correctness-critical retained checks, numerical transfer, row-by-row
-telescoping, inactive activation, and active-block admissibility.
+It is meant to be read alongside the older short manuscript.
+
+For the focused coarse-selector audit, see
+[`paper/coarse_selector_certificate_appendix.pdf`](paper/coarse_selector_certificate_appendix.pdf).
+This standalone appendix isolates the coarse-filtration selector certificates:
+each transition row specifies the coarse data allowed, the retained output
+charged, and the erased data forbidden from influencing future choices.
 
 ## What Is Novel
 
@@ -87,6 +95,10 @@ conjecture. In particular:
 sunflower-public-normal-form/
 ├── README.md
 ├── paper/
+│   ├── sunflower_retained_state_coarse_certified_complete.pdf
+│   ├── sunflower_retained_state_coarse_certified_complete.tex
+│   ├── coarse_selector_certificate_appendix.pdf
+│   ├── coarse_selector_certificate_appendix.tex
 │   ├── sunflower_manuscriptversion.pdf      ← shorter readable version
 │   ├── sunflower_manuscriptversion.tex
 │   ├── sunflow_appendix.pdf                 ← standalone technical appendix
